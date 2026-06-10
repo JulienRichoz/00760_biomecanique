@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Résumé — Biomécanique du mouvement I</title>
+<style>
+:root{
+  --bg:#0f1620; --surface:#16202d; --surface2:#1c2836; --ink:#e8edf3; --muted:#9fb0c2;
+  --line:#2a3a4d; --primary:#43b3c9; --primary2:#2e8aa0; --accent:#ffb454; --accent2:#ff8a3c;
+  --green:#5fd08a; --red:#ff6b6b; --blue:#5aa9ff; --bang:#ffd33d;
+  --radius:14px; --shadow:0 6px 22px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(160deg,#0c121b,#12202c);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.7;font-size:17px}
+.progress{position:fixed;top:0;left:0;height:4px;width:0;z-index:300;
+  background:linear-gradient(90deg,var(--primary),var(--accent))}
+header.top{padding:46px 24px 34px;text-align:center;
+  background:radial-gradient(900px 300px at 50% -40%,rgba(67,179,201,.25),transparent),linear-gradient(180deg,#13202d,#0f1822)}
+header.top .code{letter-spacing:.22em;text-transform:uppercase;font-size:.72rem;color:var(--primary);font-weight:700}
+header.top h1{margin:.25em 0 .1em;font-size:2.1rem}
+header.top p{color:var(--muted);margin:.2em 0;max-width:720px;margin-inline:auto}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px 80px}
+
+/* exam note */
+.examnote{background:linear-gradient(135deg,#33270b,#2a2008);border:1px solid #5a4413;
+  border-radius:var(--radius);padding:18px 22px;margin:26px 0;color:#ffe9bf}
+.examnote b{color:var(--bang)}
+
+/* TOC */
+nav.toc{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 22px;margin:26px 0;box-shadow:var(--shadow)}
+nav.toc h2{margin:.2em 0 .6em;font-size:1.05rem;color:var(--primary)}
+nav.toc ol{margin:0;padding-left:20px;columns:2;column-gap:30px}
+nav.toc a{color:var(--ink);text-decoration:none}
+nav.toc a:hover{color:var(--accent)}
+@media(max-width:680px){nav.toc ol{columns:1}}
+
+section.chapter{margin-top:46px}
+h2.chap{font-size:1.55rem;color:var(--primary);border-bottom:2px solid var(--line);
+  padding-bottom:10px;margin-bottom:8px;scroll-margin-top:20px}
+h2.chap .num{display:inline-block;background:var(--primary);color:#06121a;border-radius:8px;
+  padding:1px 10px;font-size:1rem;margin-right:10px;vertical-align:middle}
+h3.sub{font-size:1.2rem;color:var(--accent);margin:30px 0 6px}
+p{margin:.6em 0}
+.lead{color:var(--muted)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 20px;margin:16px 0;box-shadow:var(--shadow)}
+.def{border-left:4px solid var(--primary);background:var(--surface2)}
+.def b{color:var(--primary)}
+
+/* bang slide block */
+.bang{border:1px solid #5a4413;border-radius:var(--radius);margin:22px 0;overflow:hidden;
+  background:linear-gradient(180deg,#1d2735,#18212e);box-shadow:var(--shadow)}
+.bang .head{display:flex;align-items:center;gap:10px;padding:11px 16px;
+  background:linear-gradient(90deg,rgba(255,211,61,.16),transparent);border-bottom:1px solid #4a3a12}
+.bang .head .ic{font-size:1.2rem}
+.bang .head .ttl{font-weight:700;color:var(--bang)}
+.bang .head .src{margin-left:auto;font-size:.72rem;color:var(--muted)}
+.bang img{display:block;width:100%;background:#fff}
+.bang .exp{padding:14px 18px}
+.bang .exp p{margin:.45em 0}
+.tag{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.04em;
+  padding:2px 9px;border-radius:20px;margin-right:6px}
+.tag.must{background:var(--bang);color:#3a2c00}
+.tag.know{background:var(--primary);color:#06121a}
+
+ul.clean{margin:.5em 0;padding-left:22px}
+ul.clean li{margin:.3em 0}
+.key{background:rgba(67,179,201,.14);border-radius:6px;padding:1px 6px;color:#bfe9f2}
+.formula{font-family:"SFMono-Regular",Consolas,monospace;background:#0c151f;border:1px solid var(--line);
+  border-radius:8px;padding:2px 8px;color:#d6e8ff;font-size:.95em}
+.pill{display:inline-block;background:var(--surface2);border:1px solid var(--line);border-radius:20px;
+  padding:2px 12px;margin:3px 4px 3px 0;font-size:.85rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:680px){.grid2{grid-template-columns:1fr}}
+.mini{font-size:.92rem;color:var(--muted)}
+.up{display:block;text-align:center;margin:30px 0 10px}
+.up a{color:var(--primary);text-decoration:none;font-size:.85rem}
+footer{color:var(--muted);text-align:center;padding:30px;border-top:1px solid var(--line);margin-top:40px;font-size:.85rem}
+.newton{background:linear-gradient(135deg,#10283a,#102230);border:1px solid #2c4a63}
+.newton h4{margin:.1em 0 .3em;color:var(--blue)}
+.checkbox{accent-color:var(--accent)}
+/* translation panel */
+details.trad{margin:14px 0 2px;border:1px solid var(--primary2);border-radius:10px;
+  background:#0e1a24;overflow:hidden}
+details.trad>summary{cursor:pointer;list-style:none;padding:9px 14px;font-weight:700;
+  font-size:.9rem;color:#bfe9f2;background:linear-gradient(90deg,rgba(67,179,201,.18),transparent);
+  display:flex;align-items:center;gap:8px;user-select:none}
+details.trad>summary::-webkit-details-marker{display:none}
+details.trad>summary::before{content:"📄 Traduction FR de la slide";flex:1}
+details.trad>summary span.chev{transition:transform .2s;color:var(--primary)}
+details.trad[open]>summary span.chev{transform:rotate(180deg)}
+details.trad .body{padding:12px 16px 14px;border-top:1px solid var(--line);font-size:.95rem}
+details.trad .body p{margin:.4em 0}
+details.trad .body b{color:#d8ecff}
+details.trad .body .t{color:var(--accent);font-weight:700;display:block;margin-bottom:4px}
+details.trad .body ul{margin:.4em 0;padding-left:20px}
+details.trad .body li{margin:.25em 0}
+.tradtools{display:flex;gap:10px;margin:18px 0 4px;flex-wrap:wrap}
+.tradtools button{background:var(--surface2);border:1px solid var(--primary2);color:#bfe9f2;
+  border-radius:20px;padding:6px 16px;font-size:.82rem;cursor:pointer;font-weight:600}
+.tradtools button:hover{background:var(--primary2);color:#06121a}
+/* sticky quick nav */
+nav.quicknav{position:sticky;top:0;z-index:250;display:flex;gap:6px;align-items:center;
+  padding:8px 14px;background:rgba(12,18,27,.92);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);overflow-x:auto;white-space:nowrap;scrollbar-width:none}
+nav.quicknav::-webkit-scrollbar{display:none}
+nav.quicknav a{color:var(--muted);text-decoration:none;font-size:.82rem;font-weight:600;
+  padding:5px 11px;border-radius:18px;border:1px solid transparent;flex-shrink:0}
+nav.quicknav a:hover{color:var(--ink);background:var(--surface2)}
+nav.quicknav a.active{color:#06121a;background:var(--primary);border-color:var(--primary)}
+nav.quicknav a.quizlink{color:#3a2c00;background:var(--bang);margin-left:auto}
+nav.quicknav a.quizlink:hover{background:var(--accent)}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<header class="top">
+  <div class="code">SSP.00760 · FS 2026 · Jan Ruffieux</div>
+  <h1>Biomécanique du mouvement I</h1>
+  <p>Résumé complet en français — chapitres 1 à 7. Les slides marquées d'un <b style="color:var(--bang)">⚡!</b> sont celles que le prof a signalées comme « à savoir absolument ».</p>
+</header>
+<nav class="quicknav" id="quicknav">
+  <a href="#c1">1 · Intro</a>
+  <a href="#c2">2 · Mécanique</a>
+  <a href="#c3">3 · Cinématique</a>
+  <a href="#c4">4 · Dynamique</a>
+  <a href="#c5">5 · CMJ &amp; Course</a>
+  <a href="#c6">6 · Rotations</a>
+  <a href="#c7">7 · Cyclisme</a>
+  <a href="#cheat">🎯 Fiche</a>
+  <a href="Quiz_Biomecanique_I.html" class="quizlink">📝 Quiz</a>
+  <a href="Examen_blanc_Biomecanique_I.html" class="quizlink" style="margin-left:6px">🎓 Examen</a>
+</nav>
+<div class="wrap">
+
+<div class="examnote">
+  <b>⚡ À lire avant tout.</b> Pas de formules à mémoriser ni de calculs à l'examen (dixit le prof). Ce qui compte, c'est de <b>comprendre les concepts et de savoir lire les graphiques</b>. Ce résumé reprend <b>les 67 slides « ! »</b> du cours (capturées + expliquées en français) plus les notions importantes hors « ! » (comme les 3 lois de Newton). Les blocs jaunes <span class="tag must">⚡ SLIDE !</span> = priorité maximale.
+  <p style="margin:.6em 0 0">Sous chaque slide allemande, un panneau <b>« 📄 Traduction FR de la slide »</b> (ouvert par défaut) donne la traduction complète + l'explication des graphiques. Tu peux le replier d'un clic.</p>
+  <div class="tradtools">
+    <button onclick="document.querySelectorAll('details.trad').forEach(d=>d.open=true)">📂 Tout déplier</button>
+    <button onclick="document.querySelectorAll('details.trad').forEach(d=>d.open=false)">📁 Tout replier</button>
+  </div>
+</div>
+
+
+<div class="card" id="gloss">
+<b>🇩🇪→🇫🇷 Mini-glossaire des termes qui reviennent partout</b>
+<p class="mini" style="margin-top:8px">
+<span class="pill">Bewegung = mouvement</span><span class="pill">Weg/Ort = chemin/position</span><span class="pill">Zeit = temps</span><span class="pill">Geschwindigkeit = vitesse</span><span class="pill">Beschleunigung = accélération</span><span class="pill">Kraft = force</span><span class="pill">Masse = masse</span><span class="pill">Trägheit = inertie</span><span class="pill">Gewichtskraft = poids</span><span class="pill">Reibung = frottement</span><span class="pill">Luftwiderstand = résistance de l'air</span><span class="pill">Arbeit = travail</span><span class="pill">Leistung = puissance</span><span class="pill">Energie = énergie</span><span class="pill">Impuls = impulsion (quantité de mvt)</span><span class="pill">Kraftstoss = impulsion de force</span><span class="pill">Stoss = choc</span><span class="pill">Drehmoment = moment de force</span><span class="pill">Trägheitsmoment = moment d'inertie</span><span class="pill">Drehimpuls = moment cinétique</span><span class="pill">Winkelgeschwindigkeit = vitesse angulaire</span><span class="pill">gleichförmig = uniforme</span><span class="pill">gleichmässig beschleunigt = uniformément accéléré</span><span class="pill">schiefer Wurf = tir oblique</span><span class="pill">freier Fall = chute libre</span><span class="pill">Erhaltungssatz = loi de conservation</span><span class="pill">Bezugssystem = référentiel</span><span class="pill">Hebel(arm) = (bras de) levier</span><span class="pill">Gelenk = articulation</span><span class="pill">Sprunghöhe = hauteur de saut</span><span class="pill">Flugzeit = temps de vol</span><span class="pill">Bodenreaktionskraft = force de réaction du sol</span>
+</p>
+</div>
+
+<nav class="toc">
+  <h2>Sommaire</h2>
+  <ol>
+    <li><a href="#c1">Ch.1 — Qu'est-ce que la biomécanique ?</a></li>
+    <li><a href="#c2">Ch.2 — Bases de la mécanique</a></li>
+    <li><a href="#c3">Ch.3 — Cinématique (translation)</a></li>
+    <li><a href="#c4">Ch.4 — Dynamique (translation)</a></li>
+    <li><a href="#c5">Ch.5 — CMJ &amp; course à pied</a></li>
+    <li><a href="#c6">Ch.6 — Mouvements de rotation</a></li>
+    <li><a href="#c7">Ch.7 — Cyclisme</a></li>
+    <li><a href="#cheat">🎯 Fiche express (la veille)</a></li>
+  </ol>
+</nav>
+<!-- ============ CHAPITRE 1 ============ -->
+<section class="chapter" id="c1">
+<h2 class="chap"><span class="num">1</span>Qu'est-ce que la biomécanique ?</h2>
+<p class="lead">L'objectif de ce chapitre : poser le décor. Comprendre ce qu'étudie la biomécanique et avec quels outils, avant d'entrer dans la physique.</p>
+
+<div class="card def">
+<p><b>Mécanique</b> (branche de la physique) : étude du mouvement et de la déformation des corps, ainsi que des forces qui agissent dessus.</p>
+<p><b>Biomécanique</b> (du grec <i>bios</i> = la vie) : application des principes mécaniques pour décrire, analyser et évaluer les systèmes biologiques et les forces qui y agissent.</p>
+<p><b>Biomécanique du sport</b> : science qui décrit et explique les forces agissant sur le corps humain et les mouvements qui en résultent, à l'aide des lois mécaniques.</p>
+</div>
+
+<p>C'est une science très <b>interdisciplinaire</b> : elle emprunte à la biologie, la physique, l'anatomie, la physiologie, la chimie, les maths et l'informatique. Un mouvement humain naît d'un enchaînement complexe : planification dans le système nerveux central → commande neuromusculaire → contraction musculaire → contrôle sensorimoteur.</p>
+
+<h3 class="sub">Les slides « ! » du chapitre 1</h3>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Mécanique — Définitions</span><span class="src">Kap.1 · p.6</span></div>
+  <img src="Resume_images/F1_p6.jpg" alt="Définitions biomécanique">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> La slide des 3 définitions empilées ci-dessus. C'est <b>le vocabulaire fondateur</b> : mécanique → biomécanique → biomécanique du sport, du plus général au plus appliqué au corps humain. Si une question de définition tombe, elle vient d'ici.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Mécanique — Définitions</span><p><b>Mécanique</b> (sous-domaine de la physique) : étude du mouvement et de la déformation des corps ainsi que des forces qui y agissent.</p><p><b>Biomécanique</b> (du grec <i>bios</i> = la vie) : application des principes mécaniques pour décrire, analyser et évaluer les systèmes biologiques et les forces qui y agissent.</p><p><b>Biomécanique du mouvement (biomécanique du sport)</b> : science qui décrit et explique les forces agissant sur le corps humain et les mouvements qui en résultent, à l'aide des lois et principes mécaniques.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Buts et domaines d'application (1)</span><span class="src">Kap.1 · p.8</span></div>
+  <img src="Resume_images/F1_p8.jpg" alt="Buts application 1">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> À quoi sert la biomécanique : <b>décrire/expliquer</b> la mécanique des mouvements, <b>optimiser</b> les techniques sportives (efficacité, moins d'énergie), <b>diagnostic / thérapie / réadaptation</b> (orthopédie, physio) et <b>prévention des blessures</b> (étude des charges et forces sur le corps).</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Biomécanique — Buts et domaines d'application (1)</span><p>Décrire, comprendre, expliquer, analyser, optimiser les mouvements :</p><ul><li><b>Description et explication</b> de la mécanique des mouvements.</li><li><b>Optimisation</b> des mouvements → améliorer les techniques sportives ou les gestes du quotidien pour augmenter l'efficacité/la performance et réduire la dépense d'énergie.</li><li><b>Diagnostic, thérapie, réadaptation</b> (orthopédie, physiothérapie) → étude de la mécanique articulaire et des schémas de mouvement pour diagnostiquer/traiter les mauvaises postures et blessures de l'appareil locomoteur.</li><li><b>Prévention et réduction des blessures</b> → étude des charges et des forces agissant sur le corps pour éviter les blessures.</li></ul></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Buts et domaines d'application (2)</span><span class="src">Kap.1 · p.9</span></div>
+  <img src="Resume_images/F1_p9.jpg" alt="Buts application 2">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Suite des applications : <b>développement de matériel</b> (prothèses, orthèses, équipement), <b>ergonomie</b> (postes de travail adaptés à l'anatomie), <b>robotique</b> (robots humanoïdes) et <b>analyse d'accidents / médecine légale</b>. Idée à retenir : la biomécanique est partout, de la recherche à la prévention.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Biomécanique — Buts et domaines d'application (2)</span><ul><li><b>Développement et amélioration</b> de matériel ou d'aides sportives → prothèses, orthèses, équipement et engins.</li><li><b>Ergonomie</b> → conception de postes de travail, outils, machines, meubles adaptés à l'anatomie humaine pour minimiser les charges.</li><li><b>Robotique</b> → développement de robots humanoïdes et de prothèses.</li><li><b>Analyse d'accidents et médecine légale.</b></li></ul><p>La biomécanique trouve donc des applications dans la recherche, le sport, la prévention, la thérapie, l'orthopédie et domaines similaires.</p></div></details>
+  </div>
+</div>
+</section>
+
+<!-- ============ CHAPITRE 2 ============ -->
+<section class="chapter" id="c2">
+<h2 class="chap"><span class="num">2</span>Bases de la mécanique</h2>
+<p class="lead">Le socle théorique de tout le cours. C'est ici qu'apparaît la distinction <b>cinématique / dynamique</b> et les <b>formes de mouvement</b> — deux notions qui reviennent dans chaque chapitre suivant.</p>
+
+<div class="card">
+<p>La mécanique classique a été fondée au 17<sup>e</sup> siècle par <b>Isaac Newton</b> (<i>Principia</i>, ~1700, les 3 lois du mouvement). C'est la plus ancienne discipline de la physique.</p>
+</div>
+
+<div class="card def">
+<p><b>Mouvement</b> : toute modification de la <b>position</b> et/ou de l'<b>orientation</b> d'un corps. Toute action observable (mouvement ou déformation) est causée par une <span class="key">force</span>.</p>
+</div>
+
+<h3 class="sub">Cinématique vs Dynamique — la distinction-clé du cours</h3>
+<div class="grid2">
+  <div class="card"><b style="color:var(--primary)">Cinématique</b><br><b>COMMENT</b> un corps se déplace-t-il ?<br><span class="mini">Description purement géométrique dans l'espace et le temps, <b>sans tenir compte des forces</b>.</span></div>
+  <div class="card"><b style="color:var(--accent)">Dynamique</b><br><b>POURQUOI</b> un corps se déplace-t-il ?<br><span class="mini">Description du mouvement <b>en fonction des forces</b> qui agissent.</span></div>
+</div>
+
+<h3 class="sub">Les slides « ! » du chapitre 2</h3>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Mécanique — la force cause du mouvement</span><span class="src">Kap.2 · p.14</span></div>
+  <img src="Resume_images/F1_p14.jpg" alt="Bewegung Kraft">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Le message encadré : <b>« Toute action observable (mouvement ou déformation d'un corps) est causée par une force ! »</b> C'est le fil rouge de tout le cours. La mécanique se divise alors en deux : décrire le mouvement visible (<b>cinématique</b>) et étudier les forces sous-jacentes (<b>dynamique</b>).</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Mécanique — Mouvement</span><p><b>Mouvement</b> : on appelle mouvement toute modification de la position et/ou de l'orientation d'un corps.</p><p>En mécanique (classique), on décrit d'une part les mouvements visibles de l'extérieur (<b>cinématique</b>), et d'autre part on étudie les forces sous-jacentes au mouvement (<b>dynamique</b>).</p><p><b>Encadré clé :</b> « Tout effet observable (mouvement ou déformation d'un corps) est causé par une force ! »</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Cinématique / Dynamique — Définitions</span><span class="src">Kap.2 · p.17</span></div>
+  <img src="Resume_images/F1_p17.jpg" alt="Kinematik Dynamik Definitionen">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> La slide officielle de la distinction. <b>Cinématique = COMMENT</b> (géométrie du mouvement, sans les forces). <b>Dynamique = POURQUOI</b> (en tenant compte de toutes les forces). À connaître par cœur, c'est le genre de question « facile » qui tombe à l'examen.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Cinématique / Dynamique — Définitions</span><p><b>Cinématique</b> (du grec ancien <i>kinema</i> = mouvement) : description de l'expression spatio-temporelle du mouvement des corps, <b>sans tenir compte des forces</b>. → COMMENT un corps se déplace-t-il ? → Description purement géométrique du mouvement.</p><p><b>Dynamique</b> (cause du mouvement) : description du mouvement des corps en fonction des forces qui agissent. → POURQUOI un corps se déplace-t-il ? → On tient compte de toutes les forces.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Formes de mouvement — Translation / Rotation</span><span class="src">Kap.2 · p.19</span></div>
+  <img src="Resume_images/F1_p19.jpg" alt="Translation Rotation">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Les deux <b>formes de mouvement</b> :</p>
+    <ul class="clean">
+      <li><b>Translation</b> (déplacement) : tous les points du corps suivent des trajectoires identiques. À un instant donné, tous les points ont la <b>même vitesse et accélération</b> et parcourent le même chemin. → On peut décrire le mouvement avec un seul point (souvent le centre de gravité).</li>
+      <li><b>Rotation</b> (tour) : tous les points décrivent des cercles autour d'un <b>axe de rotation</b> commun. Même <b>vitesse angulaire</b> pour tous, mais des vitesses tangentielles différentes selon la distance à l'axe.</li>
+    </ul>
+    <p class="mini">À retenir : tout mouvement réel d'un corps rigide = <b>combinaison translation + rotation</b> (mouvement général). Les mouvements humains ne sont presque jamais purs.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Formes de mouvement</span><p><b>Translation</b> (déplacement) : mouvement où tous les points d'un corps rigide suivent des trajectoires identiques (mathématiquement = une ou plusieurs translations parallèles). À un instant donné, tous les points ont la <b>même vitesse et la même accélération</b> et parcourent donc le même chemin.</p><p><b>Rotation</b> (tour) : mouvement où tous les points d'un corps rigide se déplacent en cercle, à distance fixe, autour d'un axe de rotation commun (fixe ou imaginaire). À un instant donné, des points différents ont des <b>vitesses de trajectoire différentes</b> (selon la distance à l'axe), mais la <b>même vitesse et accélération angulaires</b>.</p></div></details>
+  </div>
+</div>
+</section>
+<div class="up"><a href="#c1">↑ haut</a></div>
+
+<!-- ============ CHAPITRE 3 ============ -->
+<section class="chapter" id="c3">
+<h2 class="chap"><span class="num">3</span>Cinématique des mouvements de translation</h2>
+<p class="lead">On décrit le mouvement <b>sans se soucier des forces</b> : position, vitesse, accélération, et comment passer de l'une à l'autre. Le chapitre le plus « graphique » du cours — sache lire les diagrammes.</p>
+
+<div class="card def">
+<p><b>Trajectoire</b> : l'ensemble des positions occupées par un point pendant le mouvement (la courbe le long de laquelle le corps se déplace). Elle peut être <b>rectiligne</b> ou <b>curviligne</b>.</p>
+</div>
+
+<h3 class="sub">Les grandeurs : scalaires vs vectorielles</h3>
+<div class="grid2">
+  <div class="card"><b>Scalaire</b> : seulement une <b>valeur</b> (un nombre).<br><span class="pill">fréquence</span><span class="pill">travail</span><span class="pill">puissance</span></div>
+  <div class="card"><b>Vectorielle</b> : une valeur <b>+ une direction</b>.<br><span class="pill">vitesse</span><span class="pill">accélération</span><span class="pill">force</span><span class="pill">moment</span></div>
+</div>
+<p>Toutes les grandeurs biomécaniques dérivent de 3 grandeurs de base : <b>longueur, masse, temps</b>.</p>
+
+<h3 class="sub">Vitesse et accélération — les définitions à comprendre</h3>
+<ul class="clean">
+  <li><b>Vitesse moyenne</b> = changement de position ÷ temps. C'est un <b>vecteur</b>, dans la direction du déplacement.</li>
+  <li><b>Vitesse instantanée</b> = pente de la <b>tangente</b> à la courbe position-temps à cet instant (= dérivée de la position). Image clé : on rétrécit l'intervalle de temps, la sécante devient tangente.</li>
+  <li><b>Accélération</b> = changement de vitesse (en valeur <b>ou</b> en direction). C'est aussi un vecteur. Une accélération négative = décélération / freinage.</li>
+</ul>
+<p class="mini">Bon à savoir : la <b>vitesse dépend du référentiel</b> (une voiture à 50 km/h… par rapport à la Terre ; la Terre file à 107 000 km/h autour du Soleil). L'<b>accélération, elle, est invariante</b> — sauf si le référentiel est lui-même accéléré (notion d'inertie / référentiel inertiel).</p>
+
+<h3 class="sub">Les slides « ! » du chapitre 3</h3>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Translation — propriétés</span><span class="src">Kap.3 · p.5</span></div>
+  <img src="Resume_images/F2_p5.jpg" alt="Translation">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> En translation, tous les points suivent des trajectoires identiques, parcourent le même chemin, ont à chaque instant la même vitesse et la même accélération. <b>Conséquence pratique</b> : pour décrire une translation, il suffit de décrire <b>un seul point</b> (en général le centre de gravité). C'est ce qui simplifie énormément les calculs.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Translation</span><p>Tous les points suivent des trajectoires de même nature.</p><ul><li>Tous les points parcourent le même chemin.</li><li>À un instant donné, tous les points ont la même vitesse et la même accélération.</li></ul><p>On choisit souvent pour cela le <b>centre de gravité du corps</b>. Une translation peut donc être vue comme la description du mouvement de points (centres de gravité). <b>Pour décrire une translation, il suffit de décrire le mouvement d'un seul point du corps.</b></p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Référentiel — système inertiel</span><span class="src">Kap.3 · p.10</span></div>
+  <img src="Resume_images/F2_p10.jpg" alt="Bezugssystem">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> La position d'un corps ne se donne que <b>relativement à un référentiel</b> (système de coordonnées + « horloge »). Même l'instant d'observation est relatif. Idée importante du chapitre : un <b>référentiel inertiel</b> est un référentiel au repos ou en mouvement à vitesse constante — c'est là que les lois de Newton sont les plus simples (principe de relativité de Galilée).</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Référentiel</span><p>La position d'un point ou d'un corps ne peut être indiquée que <b>relativement à un référentiel</b>. L'instant d'une observation est lui aussi relatif : à quel moment un corps s'est-il trouvé à quel endroit ?</p><p><b>Référentiel = système de coordonnées + « horloge ».</b></p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Calcul vectoriel — représentation</span><span class="src">Kap.3 · p.21</span></div>
+  <img src="Resume_images/F2_p21.jpg" alt="Vektorrechnung">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Beaucoup de grandeurs sont des <b>vecteurs</b> (flèche) : la <b>longueur</b> de la flèche = la valeur, la <b>direction</b> de la flèche = la direction de la grandeur. À retenir visuellement, pas par formule.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Calcul vectoriel</span><p>Beaucoup de grandeurs physiques sont des grandeurs <b>vectorielles</b>, c.-à-d. qu'elles ont une <b>valeur (norme)</b> et une <b>direction</b>.</p><p>Dans un système de coordonnées, ces grandeurs se représentent par un <b>vecteur (flèche)</b> :</p><ul><li><b>Longueur</b> du vecteur = valeur de la grandeur (nombre).</li><li><b>Direction</b> du vecteur = direction de la grandeur.</li></ul></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Calcul vectoriel — opérations</span><span class="src">Kap.3 · p.22</span></div>
+  <img src="Resume_images/F2_p22.jpg" alt="Vektoraddition">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Les vecteurs s'<b>additionnent, se soustraient, se décomposent</b> (méthode du parallélogramme / bout-à-bout). C'est l'outil qui sert partout ensuite : forces résultantes, tir oblique, collisions… Comprendre le principe géométrique suffit.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Calcul vectoriel</span>
+<p>Les vecteurs peuvent aussi être <b>additionnés, soustraits et multipliés</b>.</p>
+<p><b>Ce que montrent les 3 schémas :</b></p>
+<ul>
+<li><b>En haut à gauche</b> : addition de vecteurs « bout à bout » : s&#8407; = a&#8407; + b&#8407; + c&#8407;. On met les flèches l'une après l'autre, le vecteur somme s&#8407; va du départ du premier à la pointe du dernier. En composantes : on additionne les x ensemble et les y ensemble.</li>
+<li><b>En haut à droite</b> : application aux forces : F&#8407;<sub>res</sub> = F&#8407;<sub>A</sub> + F&#8407;<sub>B</sub> + F&#8407;<sub>C</sub> → la <b>force résultante</b> est la somme vectorielle de toutes les forces qui agissent sur le corps (le carré gris).</li>
+<li><b>En bas à droite</b> : <b>décomposition</b> d'un vecteur sur un plan incliné : le poids F<sub>G</sub> = m·g se décompose en une composante <b>perpendiculaire</b> à la pente F<sub>⊥</sub> = F<sub>G</sub>·cos(α) et une composante <b>parallèle</b> à la pente F<sub>∥</sub> = F<sub>G</sub>·sin(α) (α = angle de la pente). C'est l'opération inverse de l'addition.</li>
+</ul></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Vitesse instantanée = dérivée</span><span class="src">Kap.3 · p.26</span></div>
+  <img src="Resume_images/F2_p26.jpg" alt="Momentangeschwindigkeit">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> <b>Graphique position-temps.</b> La vitesse instantanée = <b>pente de la tangente</b> à la courbe de position. Sur le dessin, la sécante (entre deux points) bascule vers la tangente quand l'intervalle Δt tend vers zéro. Message : dériver la position → vitesse. (Aucun calcul demandé, mais sache lire « pente raide = rapide ».)</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Vitesse instantanée</span><p>La vitesse instantanée correspond donc à la <b>dérivée temporelle de la fonction position</b> (= pente de la tangente à la courbe position-temps à cet instant).</p><p class='mini'>Le graphique illustre comment la sécante (entre deux instants) se rapproche de la tangente quand l'intervalle de temps tend vers zéro.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Accélération — perception du corps</span><span class="src">Kap.3 · p.28</span></div>
+  <img src="Resume_images/F2_p28.jpg" alt="Beschleunigung">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> L'accélération = pente de la tangente à la courbe <b>vitesse-temps</b> (dérivée de la vitesse), et c'est un <b>vecteur</b>. Idée intuitive de la slide : une <b>vitesse constante</b> (avion en croisière) « ne se sent pas » ; en revanche notre corps (oreille interne / appareil vestibulaire) <b>perçoit toute accélération</b>, c'est-à-dire tout changement de vitesse.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Accélération</span><p>L'accélération décrit un changement de la vitesse (en <b>valeur ou en direction</b>). Comme pour la vitesse :</p><ul><li>l'<b>accélération moyenne</b> = (variation de vitesse) ÷ (variation de temps) ;</li><li>l'<b>accélération instantanée</b> = pente de la tangente à la courbe vitesse-temps à cet instant (= dérivée temporelle de la vitesse).</li></ul><p>L'accélération est aussi une <b>grandeur vectorielle</b>. Une accélération négative s'appelle décélération ou freinage.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡⚡</span><span class="ttl">Diagrammes de mouvement — LE graphique clé</span><span class="src">Kap.3 · p.41</span></div>
+  <img src="Resume_images/F3_p13.jpg" alt="Bewegungsdiagramme">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> <b>La slide la plus importante du chapitre</b> (et un classique d'examen). Elle montre le lien entre les 3 diagrammes <b>accélération → vitesse → position</b> pour deux types de mouvement :</p>
+    <ul class="clean">
+      <li><b>Mouvement uniforme</b> (gleichförmig) : accélération = 0 (ligne à 0), vitesse = constante (ligne horizontale), position = <b>droite montante</b>. Aucune force résultante n'agit.</li>
+      <li><b>Mouvement uniformément accéléré</b> (gleichmässig beschleunigt) : accélération = constante (ligne horizontale ≠ 0), vitesse = <b>droite montante</b>, position = <b>parabole</b>.</li>
+    </ul>
+    <p><b>La règle à retenir absolument :</b> l'<b>aire sous la courbe</b> d'accélération donne la vitesse ; l'aire sous la courbe de vitesse donne le déplacement. Et inversement la <b>pente</b> d'une courbe donne la grandeur du dessus. C'est tout l'esprit du chapitre en une image.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Types de mouvement — Diagrammes de mouvement</span>
+<p><b>Traduction des titres :</b> Beschleunigung (m/s²) = <b>accélération</b> · Geschwindigkeit (m/s) = <b>vitesse</b> · Weg (m) = <b>chemin/position</b> · t (s) = temps. Lignes : <b>Gleichförmig</b> = uniforme · <b>Gleichmässig beschleunigt</b> = uniformément accéléré.</p>
+<p>Le graphique compare les deux types de mouvement à travers les 3 diagrammes :</p>
+<ul>
+<li><b>Mouvement uniforme</b> (ligne du haut) : accélération = 0 (ligne rouge sur zéro), vitesse constante (ligne verte horizontale à 1 m/s), position = <b>droite croissante</b> (bleu).</li>
+<li><b>Mouvement uniformément accéléré</b> (ligne du bas) : accélération constante (ligne rouge horizontale à 1 m/s²), vitesse = <b>droite croissante</b> (vert), position = <b>parabole</b> (bleu).</li>
+</ul>
+<p><b>Lien entre les courbes :</b> l'<b>aire colorée</b> sous la courbe d'accélération donne la vitesse ; l'aire sous la courbe de vitesse donne le chemin parcouru. Inversement, la <b>pente</b> d'une courbe donne la grandeur du diagramme à sa gauche.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Types de mouvement — Mouvement uniforme</span><span class="src">Kap.3 · p.33</span></div>
+  <img src="Resume_images/F3_p4.jpg" alt="Gleichförmige Bewegung">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> <b>Mouvement uniforme (rectiligne)</b> : vitesse constante (valeur ET direction) → le corps n'est <b>pas accéléré</b>. Conséquence (principe d'inertie) : <b>aucune force extérieure résultante n'agit</b>. Cas particulier : un corps au repos (vitesse = 0).</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Types de mouvement (Bewegungsarten)</span>
+<p>Les mouvements sont classés en <b>types de mouvement</b> selon leur évolution dans le temps.</p>
+<p><b>Traduction du schéma en arbre :</b></p>
+<ul>
+<li><b>Bewegung</b> = Mouvement (la racine de l'arbre).</li>
+<li>1<sup>er</sup> niveau — classement <b>« Nach der Geschwindigkeit »</b> = <b>selon la vitesse</b> (en vert) :
+<ul>
+<li><b>Gleichförmig</b> = <b>uniforme</b> → v = k (vitesse constante) et a = 0 (pas d'accélération). En dessous : « Gleichförmige Bewegung » = mouvement uniforme.</li>
+<li><b>Ungleichförmig</b> = <b>non uniforme</b> → v ≠ k (vitesse qui change) et a ≠ 0 (il y a une accélération).</li>
+</ul></li>
+<li>2<sup>e</sup> niveau — classement <b>« Nach der Beschleunigung »</b> = <b>selon l'accélération</b> (en rouge), pour les mouvements non uniformes :
+<ul>
+<li><b>Gleichmässig beschleunigt</b> = <b>uniformément accéléré</b> → a = k (accélération constante). En dessous : « Gleichmässig beschleunigte Bewegung » = mouvement uniformément accéléré.</li>
+<li><b>Ungleichmässig beschleunigt</b> = <b>irrégulièrement accéléré</b> → a ≠ k (accélération qui varie) = « Allgemeine Bewegung » = <b>mouvement général</b>.</li>
+</ul></li>
+</ul>
+<p class='mini'>(k = constante.) Donc 3 types à retenir : <b>uniforme</b> (v constante), <b>uniformément accéléré</b> (a constante), <b>mouvement général</b> (a variable).</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Types de mouvement — Mouvement accéléré</span><span class="src">Kap.3 · p.34</span></div>
+  <img src="Resume_images/F3_p30.jpg" alt="Ungleichförmige Bewegung">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> <b>Mouvement uniformément accéléré</b> : accélération constante (valeur et direction). <b>Mouvement général</b> : accélération qui varie. Un corps est accéléré quand <b>une ou plusieurs forces extérieures</b> agissent, et l'accélération se fait dans la <b>direction de la force résultante</b>.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Résistance de l'air</span><p>Légende des termes de la formule de la résistance de l'air :</p><ul><li><b>c<sub>W</sub></b> = coefficient de traînée = « aérodynamisme » (forme et surface du corps).</li><li><b>A</b> = surface frontale du corps (silhouette face au vent).</li><li><b>ρ<sub>Luft</sub></b> = densité de l'air.</li><li><b>v<sub>rel</sub></b> = vitesse relative (= différence entre la vitesse du vent et celle du mouvement).</li></ul></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Chute libre &amp; accélération de pesanteur</span><span class="src">Kap.3 · p.47</span></div>
+  <img src="Resume_images/F3_p31.jpg" alt="Freier Fall g">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> <b>Chute libre</b> = mouvement où seule la <b>pesanteur</b> agit (résistance de l'air négligée). L'accélération est alors <b>constante et indépendante</b> de la masse, de la forme et du matériau → c'est un mouvement uniformément accéléré. La <b>pesanteur g</b> dépend du lieu (Fribourg ≈ 9,806 m/s²). À retenir : en chute libre, une plume et une bille tomberaient pareil… s'il n'y avait pas l'air.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Principe d'indépendance (superposition) des mouvements</span><p>Le <b>principe d'indépendance (superposition)</b> énonce que plusieurs mouvements partiels d'un corps se <b>superposent indépendamment les uns des autres</b> pour former le mouvement total.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Principe d'indépendance (superposition)</span><span class="src">Kap.3 · p.59</span></div>
+  <img src="Resume_images/F3_p34.jpg" alt="Unabhängigkeitsprinzip">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> <b>Principe d'indépendance / superposition</b> : plusieurs mouvements partiels d'un corps se <b>superposent sans s'influencer</b>. Chaque composante (horizontale, verticale…) évolue indépendamment. C'est ce qui permet de décomposer les mouvements compliqués en mouvements simples (addition de vecteurs).</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Tir oblique</span><p>Même si l'on parle d'un « tir » oblique, les descriptions valent pour <b>tout corps</b> qui se déplace ainsi, par exemple :</p><ul><li>balles ou objets après des lancers, frappes ou tirs ;</li><li>le <b>centre de gravité dans toutes les formes de sauts</b>.</li></ul></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Tir oblique (schiefer Wurf) — la parabole</span><span class="src">Kap.3 · p.63</span></div>
+  <img src="Resume_images/F3_p35.jpg" alt="Schiefer Wurf">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Application directe du principe d'indépendance. Le <b>tir oblique</b> est la <b>superposition de deux mouvements</b> :</p>
+    <ul class="clean">
+      <li>en <b>x</b> : mouvement <b>uniforme</b> (vitesse horizontale constante) ;</li>
+      <li>en <b>y</b> : mouvement <b>uniformément accéléré</b> (chute, à cause de g).</li>
+    </ul>
+    <p>Résultat : la trajectoire est une <b>parabole</b> (la « parabole de tir »). Ça vaut pour tout projectile : balles après un lancer/tir, et le <b>centre de gravité dans tous les sauts</b>. La résistance de l'air est négligée ici.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Tir oblique</span><p>Le tir oblique représente une <b>superposition de deux mouvements</b> selon le principe d'indépendance :</p><ul><li>mouvement <b>uniforme</b> selon x (dû à la vitesse initiale) ;</li><li>mouvement <b>uniformément accéléré</b> selon y (dû à la chute / pesanteur).</li></ul><p>La trajectoire décrite est une <b>parabole</b> (la parabole de tir). Pour la décrire, on décompose la vitesse initiale en une composante x et une composante y.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Tir oblique — vue détaillée</span><span class="src">Kap.3 · p.65</span></div>
+  <img src="Resume_images/F3_p37.jpg" alt="Schiefer Wurf détail">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> La même parabole décomposée en composantes vitesse (v<sub>x</sub> constante, v<sub>y</sub> qui diminue puis s'inverse). À comprendre : au sommet, la vitesse verticale est nulle mais la vitesse horizontale reste. <b>Lien examen :</b> l'angle d'envol optimal (lancer du poids, disque, saut en longueur) résulte du compromis entre vitesse et hauteur de lâcher — il n'est pas toujours 45° et il est <b>spécifique à l'athlète</b>.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Tir oblique (Schiefer Wurf)</span>
+<p>Slide-graphique : la <b>parabole de tir</b> avec les vecteurs vitesse dessinés à chaque instant de la trajectoire.</p>
+<ul>
+<li>La composante <b>horizontale v<sub>x</sub></b> (souvent en vert) reste <b>identique</b> tout au long du vol → mouvement uniforme en x.</li>
+<li>La composante <b>verticale v<sub>y</sub></b> (souvent en rouge) <b>diminue</b> à la montée, <b>s'annule au sommet</b>, puis <b>augmente</b> vers le bas à la descente → mouvement uniformément accéléré en y (pesanteur g).</li>
+<li>Le vecteur vitesse total (la flèche oblique) est la somme des deux composantes ; il est tangent à la trajectoire à chaque instant.</li>
+</ul>
+<p class='mini'>Vocabulaire : Wurf = lancer/tir · Wurfparabel = parabole de tir · Abwurfwinkel = angle d'envol.</p></div></details>
+  </div>
+</div>
+</section>
+<div class="up"><a href="#c1">↑ haut</a></div>
+
+<!-- ============ CHAPITRE 4 ============ -->
+<section class="chapter" id="c4">
+<h2 class="chap"><span class="num">4</span>Dynamique des mouvements de translation</h2>
+<p class="lead">Ici on répond à <b>POURQUOI</b> ça bouge : les <b>forces</b>. C'est le plus gros chapitre. Cœur du programme : les 3 lois de Newton, les forces (poids, frottement, élastique), puis impulsion, chocs, travail, énergie et puissance.</p>
+
+<div class="card def">
+<p><b>Statique</b> : forces dans des systèmes au repos, forces à l'équilibre (a = 0). <b>Cinétique</b> : forces dans des systèmes en mouvement, force résultante ≠ 0 (a ≠ 0).</p>
+</div>
+
+<h3 class="sub">Qu'est-ce qu'une force ?</h3>
+<p>Une force sert à décrire et prédire les <b>effets</b> sur un corps. On ne l'observe jamais directement, seulement par ses <b>effets</b>. En mécanique, 3 effets possibles : <b>changement de mouvement</b> (accélération), <b>changement de forme</b> (déformation), <b>changement de tension mécanique</b>. La force est une grandeur <b>vectorielle</b> : valeur + direction + <b>point d'application</b>. Quand plusieurs forces agissent, seule la <b>force résultante</b> (somme vectorielle) compte.</p>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Qu'est-ce que la force ?</span><span class="src">Kap.4 · p.6</span></div>
+  <img src="Resume_images/F4_p6.jpg" alt="Was ist Kraft">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Les forces servent à <b>décrire et prédire</b> les effets sur les corps. Elles ne s'observent pas directement, <b>uniquement via leurs effets</b>. Encadré clé : toute action observable (mouvement ou déformation) est causée par une force physique.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Qu'est-ce que la force ?</span><p>« Pour maîtriser le drapeau humain (human flag), il te faut énormément de force… » → Mais qu'est-ce que la force ?</p><ul><li>Les forces servent à <b>décrire et prédire</b> les effets sur les corps.</li><li>Les forces ne s'observent pas directement, <b>seulement à travers leurs effets</b>.</li></ul><p>Tout effet observable (mouvement ou déformation d'un corps) est causé par une force physique.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Force et effet — les 3 effets</span><span class="src">Kap.4 · p.7</span></div>
+  <img src="Resume_images/F4_p7.jpg" alt="Kraft und Wirkung">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Les <b>3 effets d'une force</b> : <b>changement de mouvement</b> (accélération), <b>changement de forme</b> (déformation), <b>changement de tension mécanique</b> interne. Trois photos illustrent les trois cas.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Force et effet</span><p>En mécanique, on distingue <b>trois effets</b> des forces :</p><ul><li><b>Changement de mouvement</b> (accélération).</li><li><b>Changement de forme</b> (déformation).</li><li><b>Changement de la tension mécanique</b> interne.</li></ul></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Force &amp; masse (inertie)</span><span class="src">Kap.4 · p.8</span></div>
+  <img src="Resume_images/F4_p8.jpg" alt="Kraft Masse">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> La force est la « grandeur de base dynamique ». La <b>masse</b> détermine l'<b>inertie</b> d'un corps : quelle force il faut pour l'accélérer. Une force de 1 N accélère 1 kg de 1 m/s². (C'est déjà la 2<sup>e</sup> loi de Newton qui pointe.)</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Force</span><p>La force est la « grandeur de base de la dynamique ». → <b>Principe fondamental de la dynamique (2<sup>e</sup> loi de Newton)</b> : l'accélération d'un corps (effet de la force) est proportionnelle à la force appliquée et à la masse du corps. Une force de 1 N accélère une masse de 1 kg à 1 m/s².</p><p><b>Masse</b> (propriété de la matière) : détermine l'<b>inertie</b> d'un corps, c.-à-d. la force nécessaire pour l'accélérer. → Grandeur de base de la dynamique.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Ligne d'action &amp; effet — point central</span><span class="src">Kap.4 · p.11</span></div>
+  <img src="Resume_images/F4_p11.jpg" alt="Wirklinie">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> <b>Distinction très importante</b> selon que la ligne d'action de la force passe ou non par le centre de masse :</p>
+    <ul class="clean">
+      <li>Ligne d'action <b>passant par</b> le centre de masse → <b>translation pure</b> (modèle du « point matériel »).</li>
+      <li>Ligne d'action <b>ne passant pas</b> par le centre de masse → <b>translation + rotation</b> (modèle du « corps rigide »).</li>
+    </ul>
+    <p>C'est ce qui annonce le chapitre 6 : décaler la force = créer une rotation (un moment de force).</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Force — Ligne d'action et effet</span><ul><li><b>Ligne d'action passant par</b> le centre de masse / point de rotation → <b>translation pure</b>. Modèle du « point matériel ».</li><li><b>Ligne d'action ne passant PAS par</b> le centre de masse → <b>translation + rotation</b>. Modèle du « corps rigide ».</li></ul></div></details>
+  </div>
+</div>
+
+<!-- NEWTON -->
+<h3 class="sub">⭐ Les 3 lois de Newton — le cœur de l'examen</h3>
+<p class="mini">Les trois lois forment le <b>fondement de la mécanique classique</b>. Elles relient la cinématique à la dynamique, sont formulées pour les translations mais valent aussi pour les rotations. Même si ce n'était pas marqué « ! », c'est <b>incontournable</b> — et ici les trois slides le sont.</p>
+
+<div class="card newton">
+  <h4>1️⃣ Loi d'inertie (1<sup>re</sup> loi)</h4>
+  <p>Un corps reste au repos ou en <b>mouvement rectiligne uniforme</b> tant qu'<b>aucune force résultante</b> ne le force à changer d'état. → « Tant qu'aucune force n'agit, le corps garde son état de mouvement. »</p>
+</div>
+<div class="card newton">
+  <h4>2️⃣ Principe fondamental de la dynamique (2<sup>e</sup> loi)</h4>
+  <p>L'<b>accélération</b> d'un corps est <b>proportionnelle à la force</b> et se fait le long de sa ligne d'action ; le facteur de proportionnalité est la <b>masse</b> (<span class="formula">F = m · a</span>). Plus de masse → plus de force pour la même accélération. C'est cette loi qui <b>relie dynamique et cinématique</b>.</p>
+</div>
+<div class="card newton">
+  <h4>3️⃣ Loi d'action-réaction (3<sup>e</sup> loi)</h4>
+  <p>Si un corps A exerce une force sur B, alors B exerce sur A une force <b>égale, opposée, sur la même ligne d'action</b>. Les forces vont toujours <b>par paires</b>. Vu moderne : c'est le <b>principe de conservation de la quantité de mouvement (impulsion)</b>.</p>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">1<sup>re</sup> loi — Inertie</span><span class="src">Kap.4 · p.16</span></div>
+  <img src="Resume_images/F4_p16.jpg" alt="Trägheitsgesetz">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Loi d'inertie : sans force, le corps <b>conserve</b> son état (repos ou mouvement rectiligne uniforme). Le chat de Garfield qui ne veut pas bouger = bonne image mnémotechnique.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Loi d'inertie (1<sup>re</sup> loi de Newton)</span><p>Tant qu'aucune force n'agit sur un corps, il <b>conserve son état de mouvement</b> actuel.</p><p><b>Énoncé :</b> un corps reste au repos ou en mouvement rectiligne uniforme tant qu'il n'est pas contraint de changer d'état par des forces qui agissent sur lui.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">2<sup>e</sup> loi — Principe fondamental</span><span class="src">Kap.4 · p.17</span></div>
+  <img src="Resume_images/F4_p17.jpg" alt="2. Newton">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> <b>F = m·a.</b> La variation de mouvement (accélération) est proportionnelle à la force et se fait dans la direction de celle-ci. C'est le pont entre <b>dynamique</b> (force) et <b>cinématique</b> (accélération).</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Principe fondamental de la dynamique (2<sup>e</sup> loi de Newton)</span><p>La force est le produit de la masse et de l'accélération (F = m·a).</p><p>→ Le changement de mouvement d'un corps (accélération) est <b>proportionnel à la force</b> appliquée et se fait le long de la ligne d'action de cette force.</p><p>→ En reliant une force à une accélération, cette loi <b>connecte la dynamique et la cinématique</b>.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">3<sup>e</sup> loi — Action-Réaction</span><span class="src">Kap.4 · p.19</span></div>
+  <img src="Resume_images/F4_p19.jpg" alt="Wechselwirkungsgesetz">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Quand deux corps interagissent, les forces apparaissent <b>par paires</b> : A→B et B→A, égales et opposées. C'est l'origine de la <b>conservation de l'impulsion</b>. La bande dessinée Foxtrot illustre le « recul ».</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Loi d'action-réaction (3<sup>e</sup> loi de Newton)</span><p>→ Lors de l'interaction de deux corps, si l'un subit un changement de son état de mouvement, l'autre subit le <b>même changement en sens opposé</b>. Vu moderne : cela correspond au <b>principe de conservation de l'impulsion</b>.</p><p><b>Énoncé :</b> quand deux corps interagissent, les forces apparaissent toujours par paires. Si A exerce une force sur B, B exerce simultanément sur A une force <b>égale, sur la même ligne d'action, mais opposée</b>.</p></div></details>
+  </div>
+</div>
+
+<h3 class="sub">Les forces concrètes : poids, normale, frottement, élastique</h3>
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Poids, force normale &amp; force le long de la pente</span><span class="src">Kap.4 · p.22</span></div>
+  <img src="Resume_images/F4_p22.jpg" alt="Gewichtskraft Normalkraft">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Trois forces à distinguer sur un plan incliné :</p>
+    <ul class="clean">
+      <li><b>Poids</b> = masse × g (dépend du lieu).</li>
+      <li><b>Force normale</b> = réaction de la surface, toujours <b>perpendiculaire</b> à celle-ci. C'est elle qui détermine le <b>frottement</b>.</li>
+      <li><b>Force le long de la pente</b> (Hangabtriebskraft) = composante du poids <b>parallèle</b> à la surface, qui accélère le corps vers le bas.</li>
+    </ul>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Poids, force normale et force de pente</span><p>Le <b>poids</b> est le produit de la masse et de l'accélération de pesanteur (dépend du lieu).</p><p>La <b>force normale</b> est la force de réaction lors de l'interaction d'un corps avec une surface. Elle est toujours <b>perpendiculaire (normale)</b> à la surface, de même grandeur que la composante normale de la force mais de sens opposé. → La force normale détermine la force de frottement.</p><p>La <b>force de pente</b> (Hangabtriebskraft) est la composante du poids qui agit <b>parallèlement</b> à la surface d'un plan incliné. → Accélère le corps vers le bas de la pente.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Frottement — la loi de base</span><span class="src">Kap.4 · p.25</span></div>
+  <img src="Resume_images/F4_p25.jpg" alt="Reibung">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Le frottement F<sub>R</sub> est <b>proportionnel</b> au coefficient μ et à la force normale F<sub>n</sub> (<span class="formula">F<sub>R</sub> = μ · F<sub>n</sub></span>). Points à retenir : il est en général <b>indépendant de la surface de contact et de la vitesse</b>, agit <b>parallèlement</b> à la surface et <b>contre</b> le mouvement. Exception : matériaux élastiques (caoutchouc) où ça ne tient plus.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Frottement</span><p>Les forces de frottement entre solides sont décrites par la formule F<sub>R</sub> = μ·F<sub>n</sub>, où μ = coefficient de frottement et F<sub>n</sub> = composante normale de la force (force de pression).</p><ul><li>F<sub>R</sub> est proportionnelle à μ et à F<sub>n</sub>.</li><li>F<sub>R</sub> est en règle générale <b>indépendante de la surface de contact et de la vitesse</b>.</li><li>F<sub>R</sub> agit toujours à la surface de contact, parallèlement à celle-ci et <b>opposée au sens du mouvement</b>.</li><li>Pour les matériaux élastiques (ex. caoutchouc), le frottement n'est plus indépendant de la surface, de la température et de la vitesse !</li></ul></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Types de frottement : adhérence > glissement > roulement</span><span class="src">Kap.4 · p.28</span></div>
+  <img src="Resume_images/F4_p28.jpg" alt="Reibungsarten">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Trois types, à classer dans le bon ordre : <b>μ<sub>adhérence</sub> &gt; μ<sub>glissement</sub> &gt;&gt; μ<sub>roulement</sub></b>.</p>
+    <ul class="clean">
+      <li><b>Adhérence</b> (Haftreibung) : au repos, empêche de glisser ; pas constante, croît avec la force appliquée.</li>
+      <li><b>Glissement</b> (Gleitreibung) : quand ça glisse ; force <b>constante</b>, plus faible que l'adhérence max.</li>
+      <li><b>Roulement</b> (Rollreibung) : quand ça roule ; encore plus faible.</li>
+    </ul>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Types de frottement</span><ul><li><b>Frottement d'adhérence</b> (Haftreibung) : apparaît au repos. Empêche un corps de bouger sur une surface. Force non constante, qui <b>croît avec la force extérieure</b>. La formule donne le frottement d'adhérence maximal (force minimale pour mettre le corps en mouvement).</li><li><b>Frottement de glissement</b> (Gleitreibung) : s'oppose au mouvement d'un corps sur une surface. Force <b>constante</b>, indépendante de la vitesse et de la force extérieure. Plus petite que le frottement d'adhérence maximal.</li><li><b>Frottement de roulement</b> (Rollreibung) : apparaît quand un corps roule. Indépendant du mouvement/de la vitesse. Toujours plus petit que le frottement de glissement.</li></ul></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Le frottement dans le sport</span><span class="src">Kap.4 · p.30</span></div>
+  <img src="Resume_images/F4_p30.jpg" alt="Reibung im Sport">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Idée forte : <b>sans frottement, aucun mouvement sportif (ni même la marche) n'est possible</b> — pas de réaction du sol = pas de poussée latérale. On joue dessus en modulant : la <b>force</b>, la <b>direction de la force</b>, le <b>coefficient μ</b>. <b>Haute adhérence</b> → stabilité et contrôle ; <b>faible glissement/roulement</b> → vitesse et efficacité.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Le frottement dans le sport</span><p>Le frottement est une force fondamentale pour tout mouvement ou performance sportive ! Sans frottement, impossible d'exercer des forces latérales sur le sol (pas de force de réaction sous forme de frottement). → Même la marche normale serait impossible sans frottement !</p><p>Le frottement peut être influencé par : la <b>force</b>, la <b>direction de la force</b>, le <b>coefficient de frottement</b>.</p><ul><li>Un <b>frottement d'adhérence élevé</b> assure souvent stabilité et contrôle.</li><li>Un <b>frottement de glissement/roulement faible</b> assure souvent vitesse et efficacité.</li></ul></div></details>
+  </div>
+</div>
+
+<h3 class="sub">Impulsion (quantité de mouvement) &amp; chocs — Dynamik (2)</h3>
+<div class="card def">
+<p><b>Impulsion</b> p = masse × vitesse (vecteur). Toute force provoque une <b>variation d'impulsion</b> dans le temps.</p>
+<p><b>Impulsion de force</b> (Kraftstoss) = force × durée = variation d'impulsion. = <b>aire sous la courbe force-temps</b>.</p>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Impulsion (quantité de mouvement)</span><span class="src">Kap.4 · p.43</span></div>
+  <img src="Resume_images/F5_p2.jpg" alt="Impuls">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> L'impulsion <b>p = m·v</b> décrit l'état de mouvement rectiligne d'un corps. Le principe fondamental peut s'exprimer ainsi : toute force = <b>variation d'impulsion dans le temps</b>. Grandeur centrale pour tout ce qui suit (chocs).</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Impulsion (quantité de mouvement)</span><p>L'impulsion est une grandeur centrale de la dynamique, qui décrit l'état de mouvement rectiligne d'un corps. Le principe fondamental de la dynamique peut aussi s'exprimer via l'impulsion.</p><p>L'<b>impulsion = produit de la masse et de la vitesse</b> d'un corps (p = m·v). Toute force agissant sur un corps provoque une <b>variation d'impulsion dans le temps</b>.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Impulsion de force (Kraftstoss)</span><span class="src">Kap.4 · p.44</span></div>
+  <img src="Resume_images/F5_p3.jpg" alt="Kraftstoss">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> L'<b>impulsion de force = force × durée</b> = variation d'impulsion. Conséquence sportive énorme : l'effet d'une force dépend non seulement de son <b>intensité</b> mais aussi de sa <b>durée d'application</b>. D'où l'importance de la <b>force explosive</b> (produire une grande variation d'impulsion en peu de temps).</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Impulsion de force (Kraftstoss)</span><p>Une grandeur étroitement liée à l'impulsion est l'<b>impulsion de force</b>.</p><ul><li>Une impulsion de force provoque une variation d'impulsion, ce qui (à masse constante) équivaut à une variation de vitesse.</li><li>L'effet d'une force ne dépend pas seulement de sa <b>grandeur</b>, mais aussi de sa <b>durée d'application</b> — c'est exactement ce que décrit l'impulsion de force.</li></ul><p><b>Impulsion de force = produit de la force et du temps = variation d'impulsion.</b></p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Conservation de l'impulsion</span><span class="src">Kap.4 · p.48</span></div>
+  <img src="Resume_images/F5_p7.jpg" alt="Impulserhaltung">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> <b>Loi de conservation de l'impulsion</b> : si aucune force extérieure n'agit sur un système, l'impulsion totale (somme des vecteurs) reste <b>constante</b> avant et après un choc. Un des plus importants principes de conservation de la physique, base de toute la théorie des chocs.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Conservation de l'impulsion</span><ul><li>Un des principes de conservation les plus importants de la physique.</li><li>Fondamental pour décrire les chocs : dans un référentiel inertiel, la <b>somme des vecteurs impulsion</b> de tous les partenaires de choc est la même <b>avant et après le choc</b>.</li></ul><p><b>Énoncé :</b> si aucune force extérieure n'agit sur un système, l'impulsion totale est constante.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Conservation de l'impulsion — origine</span><span class="src">Kap.4 · p.49</span></div>
+  <img src="Resume_images/F5_p8.jpg" alt="Impulserhaltung 2">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> La conservation de l'impulsion <b>découle des 2<sup>e</sup> et 3<sup>e</sup> lois de Newton</b>. Lors d'un choc, les deux corps subissent la <b>même force</b> et la <b>même variation d'impulsion</b>, en sens opposés. (Cf. exemple du golf : le club perd exactement l'impulsion que gagne la balle.)</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Conservation de l'impulsion</span><p>La loi de conservation de l'impulsion <b>découle des 2<sup>e</sup> et 3<sup>e</sup> lois de Newton</b>.</p><p>Lors de chaque choc entre deux corps, les deux subissent la <b>même force</b> et la <b>même variation d'impulsion</b> — en sens opposés.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Formes de chocs : élastique / inélastique</span><span class="src">Kap.4 · p.51</span></div>
+  <img src="Resume_images/F5_p11.jpg" alt="Stösse Formen">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Deux cas idéaux + le cas réel :</p>
+    <ul class="clean">
+      <li><b>Choc parfaitement élastique</b> (k = 1) : l'énergie cinétique est conservée. Quasi jamais atteint en vrai.</li>
+      <li><b>Choc parfaitement inélastique / plastique</b> (k = 0) : un maximum d'énergie cinétique part en chaleur/déformation, les corps « collent » et repartent ensemble (ex. réception d'un saut, tackle).</li>
+      <li><b>Choc réel</b> (0 &lt; k &lt; 1) : le cas le plus fréquent dans le sport. Mais <b>la conservation de l'impulsion vaut TOUJOURS</b>, quel que soit le type de choc.</li>
+    </ul>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Formes de chocs</span><p>Les chocs réels entre deux corps (macroscopiques) sont le plus souvent une <b>forme intermédiaire</b>. <b>Le principe de conservation de l'impulsion vaut pour toutes les formes de chocs !</b></p><p><b>Choc réel (partiellement élastique)</b> : une partie de l'énergie cinétique est convertie en énergie interne (coefficient de restitution 0 &lt; k &lt; 1). → Forme la plus fréquente dans le sport.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Chocs dans le sport</span><span class="src">Kap.4 · p.56</span></div>
+  <img src="Resume_images/F5_p15.jpg" alt="Stösse im Sport">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Dans le sport, presque tous les chocs sont inélastiques, obliques, excentriques et rugueux. On les classe par <b>but</b> :</p>
+    <ul class="clean">
+      <li><b>Propulsifs</b> → transmettre/augmenter la vitesse (le plus élastique possible) : golf, tennis, tir au foot.</li>
+      <li><b>Absorbants</b> → réduire la vitesse (le plus inélastique possible) : attraper un ballon, réception de saut.</li>
+      <li><b>Déviants</b> → changer la direction : manchette au volley, bande.</li>
+    </ul>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Chocs dans le sport</span><p>Dans le sport, presque tous les chocs sont inélastiques (partiellement élastiques), obliques, excentriques et rugueux (déformations, pertes d'énergie, composantes de rotation…). On peut les classer en :</p><ul><li><b>Chocs propulsifs</b> → transmettre/augmenter vitesse et énergie (le plus élastique possible). Ex. golf, tennis, tir au foot, contact au sol en course.</li><li><b>Chocs absorbants</b> → réduire vitesse et énergie (le plus inélastique possible). Ex. attraper un ballon, réception de saut, tackle au rugby.</li><li><b>Chocs déviants</b> → changer la direction de la vitesse / de l'impulsion. Ex. manchette au volley, jeu de bande.</li></ul></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Exemple golf — bilan d'impulsion</span><span class="src">Kap.4 · p.66</span></div>
+  <img src="Resume_images/F5_p25.jpg" alt="Golf Impulserhaltung">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Le tableau du drive de golf : le club (0,2 kg) passe de 40 à 28 m/s, la balle (0,04 kg) part à 60 m/s. Le club a <b>cédé 2,4 kg·m/s</b> exactement à la balle → impulsion totale conservée (8 = 8). À comprendre : <b>même variation d'impulsion, sens opposés</b>. (Pas besoin de refaire le calcul, juste de lire le bilan.)</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Exemple golf — bilan de l'impulsion</span><p>Tableau de contrôle de la conservation de l'impulsion (m = masse, v = vitesse avant, p = impulsion avant, v' = vitesse après, p' = impulsion après, Δp = variation) :</p><ul><li><b>Club</b> : 0,2 kg ; 40 → 28 m/s ; impulsion 8 → 5,6 ; <b>Δp = −2,4</b>.</li><li><b>Balle</b> : 0,04 kg ; 0 → 60 m/s ; impulsion 0 → 2,4 ; <b>Δp = +2,4</b>.</li><li><b>Total</b> : 8 avant = 8 après → variation nulle.</li></ul><p>→ La tête de club a transmis une partie de son impulsion (2,4 kg·m/s) à la balle. Les deux corps subissent la même variation d'impulsion, en sens opposés.</p></div></details>
+  </div>
+</div>
+
+<h3 class="sub">Travail, énergie, puissance — Dynamik (3)</h3>
+<div class="card def">
+<p><b>Travail</b> = énergie transférée par une force le long d'un chemin (= aire sous la courbe force-déplacement). <b>Énergie</b> = travail stocké. <b>Puissance</b> = travail (ou énergie) par unité de temps.</p>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Travail</span><span class="src">Kap.4 · p.69</span></div>
+  <img src="Resume_images/F6_p1.jpg" alt="Arbeit">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> <b>Travail = force × chemin parcouru</b> (le long de ce chemin). Le travail physique est l'énergie transférée à un système par l'action d'une force sur une distance. Seule la composante de force <b>dans la direction du déplacement</b> travaille.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Travail</span><p>Le <b>travail physique</b> est l'énergie transférée à un système par l'action d'une force le long d'un chemin.</p><p>→ Le travail = produit du <b>chemin parcouru</b> et de la <b>force le long de ce chemin</b>.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Travail musculaire ≠ travail mécanique</span><span class="src">Kap.4 · p.78</span></div>
+  <img src="Resume_images/F6_p10.jpg" alt="Muskelarbeit">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Nuance importante : le <b>travail musculaire n'est pas le travail mécanique externe</b>. Un muscle peut « travailler » sans mouvement visible (maintien d'une tension = travail <b>isométrique</b>, consomme de l'ATP). Le travail musculaire est en général <b>nettement supérieur</b> au travail mécanique externe (rendement, leviers, co-contractions…). Ex. la planche : « pas de travail au sens mécanique », mais épuisant.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Travail — Travail musculaire</span><p>Le travail musculaire n'est pas égal au travail mécanique externe (mouvement, déformation) ! Les muscles peuvent aussi « travailler » sans mouvement extérieur.</p><ul><li>Maintenir une tension musculaire — même sans mouvement — consomme de l'énergie (ATP). C'est le <b>travail isométrique (physiologique)</b>.</li><li>Le travail musculaire est généralement <b>nettement supérieur</b> au travail mécanique externe.</li><li>Causes : rendement du muscle (pertes de chaleur), rapports de leviers, travail interne entre segments, co-contractions, tissus élastiques.</li></ul><p>(Ex. drapeau humain : aucun travail au sens mécanique, mais énorme effort musculaire.)</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Énergie</span><span class="src">Kap.4 · p.79</span></div>
+  <img src="Resume_images/F6_p11.jpg" alt="Energie">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> <b>L'énergie est du travail stocké, et le travail est une différence d'énergie.</b> Travail, énergie et chaleur ont la <b>même unité (le joule)</b>. Un travail négatif = le système restitue de l'énergie.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Énergie</span><ul><li>Quand un travail est fourni à un corps, on lui apporte une quantité d'énergie égale à ce travail, qui est en même temps retirée au système qui produit la force (conservation de l'énergie).</li><li>Quand un système fournit du travail ou cède de la chaleur, son énergie diminue.</li><li>Travail, énergie et chaleur ont la <b>même unité (le joule, J)</b>.</li></ul><p><b>L'énergie est du travail stocké, et le travail est une différence d'énergie.</b></p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Formes d'énergie</span><span class="src">Kap.4 · p.80</span></div>
+  <img src="Resume_images/F6_p12.jpg" alt="Energieformen">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Les formes mécaniques : <b>énergie potentielle</b> (de position ; son zéro est librement choisi, seule la variation compte), <b>énergie cinétique</b> (de mouvement), <b>énergie élastique</b> (de déformation). Plus les formes électrique/chimique/thermique.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Formes d'énergie</span><ul><li><b>Énergie potentielle</b> (de position ; = travail de levage stocké). Contrairement aux énergies cinétique et élastique, son zéro est librement choisi — seule la <b>variation</b> compte.</li><li><b>Énergie cinétique</b> (= travail d'accélération stocké).</li><li><b>Énergie élastique</b> (énergie de déformation ; = travail de déformation stocké).</li><li>Énergies électrique, chimique, thermique…</li></ul></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Conservation de l'énergie</span><span class="src">Kap.4 · p.81</span></div>
+  <img src="Resume_images/F6_p13.jpg" alt="Energieerhaltung">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> <b>Loi de conservation de l'énergie</b> : dans un système fermé, l'énergie totale est <b>constante</b>. L'énergie ne se crée ni ne se détruit, elle se <b>transforme</b> d'une forme à l'autre. (C'est ce qui permet de résoudre des problèmes « par l'énergie » plus simplement que par la cinématique — ex. bungee, perche.)</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Conservation de l'énergie</span><ul><li>L'énergie peut être <b>transformée</b> d'une forme à une autre.</li><li>L'énergie ne peut être <b>ni détruite ni créée</b>.</li></ul><p><b>Système fermé</b> : « portion de la nature » dans laquelle aucune énergie ne sort ni n'entre.</p><p><b>Loi de conservation de l'énergie :</b> dans un système fermé, l'énergie totale est constante.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Bungee jump — 3 formes d'énergie</span><span class="src">Kap.4 · p.83</span></div>
+  <img src="Resume_images/F6_p15.jpg" alt="Bungee Energie">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Exemple d'application de la conservation de l'énergie (air et frottement négligés). Pendant le saut, trois énergies s'échangent : <b>potentielle ↔ cinétique ↔ élastique</b> (la corde). Au point le plus haut : tout en potentielle ; vitesse max quand la résultante des forces s'annule (poids = force élastique). À comprendre comme une <b>conversion continue</b>, pas comme un calcul.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Conservation de l'énergie — Bungee Jump</span>
+<p><b>Lecture du graphique</b> (axes : E (kJ) = énergie en kilojoules ; h (m) = hauteur, qui diminue de 90 m à 0 vers la droite = la chute) :</p>
+<ul>
+<li><b>E<sub>tot</sub></b> (bleu, ligne horizontale) = <b>énergie totale</b> : constante du début à la fin → c'est la conservation de l'énergie !</li>
+<li><b>E<sub>pot</sub> = m·g·h</b> (rouge) = <b>énergie potentielle</b> : diminue en ligne droite pendant la chute (proportionnelle à la hauteur).</li>
+<li><b>E<sub>kin</sub> = m·v²/2</b> (vert) = <b>énergie cinétique</b> : augmente, passe par un <b>maximum</b> (vitesse maximale, ici vers 40 m) puis redescend à 0 au point le plus bas.</li>
+<li><b>E<sub>elast</sub> = k·Δl²/2</b> (violet) = <b>énergie élastique de la corde</b> : nulle tant que la corde n'est pas tendue (l<sub>Seil</sub> = longueur de la corde au repos), puis monte en flèche quand la corde s'étire (Δl<sub>Seil</sub> = allongement de la corde).</li>
+</ul>
+<p>À chaque hauteur, les trois courbes s'additionnent pour donner la ligne bleue : <b>E<sub>pot</sub> + E<sub>kin</sub> + E<sub>elast</sub> = E<sub>tot</sub> = constante</b>. La vitesse max est atteinte quand E<sub>kin</sub> culmine, et en bas tout est stocké dans la corde (E<sub>elast</sub>).</p>
+<p class='mini'>Vocabulaire : Seil = corde · Energieerhaltung = conservation de l'énergie.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Puissance</span><span class="src">Kap.4 · p.95</span></div>
+  <img src="Resume_images/F6_p27.jpg" alt="Leistung">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> <b>Puissance = travail (ou énergie) par unité de temps.</b> Plus le travail est fait vite, plus la puissance est grande. « Plus une force agit vite, plus la puissance est élevée. » Pour une translation : puissance = force × vitesse.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Puissance</span><p>La <b>puissance</b> désigne le travail fourni (ou l'énergie convertie) par unité de temps.</p><ul><li>Plus le temps pour fournir un travail / convertir de l'énergie est court, plus la puissance est grande.</li><li>Plus « une force agit vite », plus la puissance est élevée.</li></ul><p>Pour les translations, la puissance = produit scalaire de la force et de la vitesse.</p></div></details>
+  </div>
+</div>
+</section>
+<div class="up"><a href="#c1">↑ haut</a></div>
+
+<!-- ============ CHAPITRE 5 ============ -->
+<section class="chapter" id="c5">
+<h2 class="chap"><span class="num">5</span>Biomécanique du CMJ &amp; de la course</h2>
+<p class="lead">L'application concrète des chapitres 3 et 4 sur deux gestes : le <b>Countermovement Jump</b> (saut avec contre-mouvement) et la <b>course à pied</b>. Peu de slides « ! » (3), mais une slide-graphique majeure, et du contexte utile à connaître.</p>
+
+<h3 class="sub">Mesurer : la plateforme de force</h3>
+<p>La <b>plateforme de force</b> (Kraftmessplatte) est l'un des outils les plus utilisés en biomécanique (analyse de marche/course, équilibre, saut). Un capteur 3D dans chaque coin → 12 signaux → on en tire les <b>forces de réaction du sol</b> et les moments. Le capteur (jauge de contrainte ou piézoélectrique) transforme une <b>déformation</b> en signal électrique proportionnel à la force. Autres méthodes : barrière lumineuse (temps de vol), IMU, motion capture, vidéo.</p>
+
+<h3 class="sub">Les slides « ! » du chapitre 5</h3>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">CMJ — Cinématique (le saut = tir oblique vertical)</span><span class="src">Kap.5 · p.7</span></div>
+  <img src="Resume_images/F7_p7.jpg" alt="CMJ Kinematik">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Pendant la <b>phase de vol</b>, le centre de gravité fait un <b>mouvement rectiligne uniformément accéléré</b> (g vers le bas), avec une vitesse initiale vers le haut. C'est un <b>cas particulier du tir oblique</b> (chapitre 3) avec une vitesse purement verticale. On néglige la résistance de l'air. → La hauteur de saut se déduit donc de la vitesse d'envol ou du temps de vol.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>CMJ — Cinématique</span><p>Composante verticale du mouvement (résistance de l'air négligée) : le <b>centre de gravité</b> effectue un mouvement rectiligne <b>uniformément accéléré</b> avec une vitesse initiale. → C'est un <b>cas particulier du tir oblique</b>, avec une vitesse dirigée verticalement vers le haut.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡⚡</span><span class="ttl">CMJ — Dynamique → Cinématique (graphique majeur)</span><span class="src">Kap.5 · p.10</span></div>
+  <img src="Resume_images/F7_p10.jpg" alt="CMJ Dynamik Kinematik">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> <b>Le graphique-phare du chapitre.</b> Trois courbes empilées et synchronisées, lues de haut en bas :</p>
+    <ul class="clean">
+      <li><b>Accélération a</b> (rouge) = F<sub>y</sub>/m − g, calculée depuis la force de réaction du sol mesurée. On y voit la phase d'abaissement (a négative, A₁), la phase de poussée (a positive, A₂+A₃), puis le <b>vol</b> (a = −g, plat en bas) et la réception (pic).</li>
+      <li><b>Vitesse v</b> (vert) = <b>intégrale de a</b> (aire sous la courbe d'accélération). Elle descend (contre-mouvement) puis monte jusqu'au pic d'envol.</li>
+      <li><b>Hauteur h</b> (bleu) = <b>intégrale de v</b>. Creux (flexion) puis sommet = hauteur de saut.</li>
+    </ul>
+    <p><b>Message clé :</b> on part de la <b>force mesurée</b> (dynamique) et, par <b>double intégration</b>, on remonte à la vitesse puis à la position (cinématique). Exactement la logique « aire sous la courbe » du chapitre 3, appliquée à un vrai saut. Sache identifier chaque phase sur la courbe.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>CMJ — Dynamique → Cinématique</span><p>Slide-graphique majeur. Trois courbes synchronisées (de haut en bas) :</p><ul><li><b>a (accélération)</b> = F<sub>y</sub>/m − g, déduite de la force de réaction du sol mesurée. On lit : abaissement (a&lt;0, zone A₁), poussée (a&gt;0, zones A₂+A₃), vol (a=−g, plat), réception (pic).</li><li><b>v (vitesse)</b> = intégrale de a (Δv = ∫a dt) → aire sous la courbe d'accélération.</li><li><b>h (hauteur)</b> = intégrale de v (Δh = ∫v dt). Le sommet de la courbe = hauteur de saut.</li></ul><p>Message : on part de la <b>force mesurée</b> et, par <b>double intégration</b>, on remonte à la vitesse puis à la hauteur.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">CMJ — 4 façons de calculer la hauteur</span><span class="src">Kap.5 · p.14</span></div>
+  <img src="Resume_images/F7_p14.jpg" alt="CMJ Sprunghöhe">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Quatre méthodes pour obtenir la <b>hauteur de saut</b>, toutes vues dans le cours : <b>(1)</b> via le <b>temps de vol</b>, <b>(2)</b> par <b>double intégration</b> de la courbe d'accélération (point max de la position), <b>(3)</b> via l'<b>impulsion</b> à l'instant du décollage, <b>(4)</b> via l'<b>énergie</b> (au sommet, tout est énergie potentielle). À retenir : ces méthodes donnent de <b>petites différences</b> (selon les hypothèses et erreurs de mesure) — d'où la question « pourquoi ces écarts ? ».</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>CMJ — Calcul de la hauteur de saut</span><p>Quatre méthodes pour obtenir la hauteur de saut :</p><ul><li>Via le <b>temps de vol</b>.</li><li>Par <b>double intégration</b> de la courbe d'accélération → point maximal de la courbe de position.</li><li>Via l'<b>impulsion</b> à l'instant du décollage.</li><li>Via l'<b>énergie</b> → au point le plus haut, il n'y a que de l'énergie potentielle.</li></ul><p>→ Question posée : d'où viennent les <b>différences</b> entre les hauteurs calculées par ces méthodes ? (hypothèses et erreurs de mesure)</p></div></details>
+  </div>
+</div>
+
+<h3 class="sub">À connaître aussi (course à pied, hors « ! »)</h3>
+<div class="card">
+<p><b>Réception = choc parfaitement inélastique</b> avec le sol. On ne peut réduire la force de freinage qu'en <b>allongeant le temps de freinage</b> (amortir, plier les genoux, semelles, tapis). C'est l'impulsion de force du chapitre 4 : même variation d'impulsion, mais étalée → force plus faible.</p>
+</div>
+<div class="card">
+<p><b>Le « paradoxe du travail nul » (zero work paradox)</b> : courir à vitesse constante sur le plat, le travail mécanique externe net = 0 (ni l'énergie cinétique ni potentielle ne changent durablement)… et pourtant ça <b>coûte de l'énergie métabolique</b>. Pourquoi ? Le centre de gravité est freiné puis ré-accéléré à <b>chaque appui</b>, les muscles ne sont pas des ressorts parfaits (~50 % de restitution élastique), freiner coûte aussi du travail, le rendement musculaire est bas (~25 %), plus le travail interne des segments.</p>
+</div>
+<div class="card">
+<p><b>Paramètres spatio-temporels de la course</b> : <span class="key">vitesse = longueur de foulée × fréquence de foulée</span>. Mesurables par systèmes optiques (OptoGait). Distinction de vocabulaire : « spatio-temporal » = global/événementiel (paramètres de foulée) ; « kinematic » = spécifique aux segments/articulations (angles articulaires).</p>
+</div>
+<div class="card">
+<p><b>Motion capture &amp; dynamique inverse</b> : le motion capture (marqueurs réfléchissants + caméras, triangulation) donne très précisément la cinématique. Les <b>forces et moments articulaires</b>, eux, ne se mesurent pas directement → on les estime par <b>dynamique inverse</b> (le corps modélisé en segments rigides reliés par des articulations). Un modèle reste une <b>simplification de la réalité</b> reposant sur des hypothèses. Les montres (Garmin) estiment l'énergie avec 10-20 % d'écart vs labo (gold standard = calorimétrie indirecte).</p>
+</div>
+</section>
+<div class="up"><a href="#c1">↑ haut</a></div>
+
+<!-- ============ CHAPITRE 6 ============ -->
+<section class="chapter" id="c6">
+<h2 class="chap"><span class="num">6</span>Mouvements de rotation</h2>
+<p class="lead">Le pendant du chapitre 4, mais pour les <b>rotations</b>. Toute la mécanique se « traduit » : masse→moment d'inertie, force→moment de force, impulsion→moment cinétique. Chapitre dense en slides « ! » (16) — c'est dire son importance.</p>
+
+<div class="card def">
+<p><b>Rotation</b> : tous les points du corps décrivent des cercles à distance fixe autour d'un <b>axe de rotation</b>. En rotation pure, le corps change d'<b>orientation</b> mais pas de position. Tous les points ont la <b>même vitesse angulaire</b>, mais des <b>vitesses tangentielles différentes</b> (selon la distance à l'axe).</p>
+</div>
+
+<h3 class="sub">Le tableau de correspondance translation ↔ rotation</h3>
+<p class="mini">À garder en tête en permanence pour ce chapitre :</p>
+<div class="grid2">
+  <div class="card"><b>Cinématique</b><br>chemin ↔ angle<br>vitesse ↔ vitesse angulaire<br>accélération ↔ accélération angulaire</div>
+  <div class="card"><b>Dynamique</b><br>masse ↔ <b>moment d'inertie</b><br>force ↔ <b>moment de force</b><br>impulsion ↔ <b>moment cinétique</b><br>énergie cinétique ↔ énergie de rotation</div>
+</div>
+
+<h3 class="sub">Les slides « ! » du chapitre 6 — partie 1</h3>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Rotation &amp; corps rigide</span><span class="src">Kap.6 · p.3</span></div>
+  <img src="Resume_images/F9_p3.jpg" alt="Rotation rigid body">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Définition de la rotation + <b>modèle du corps rigide</b> : un corps non déformable (la distance entre deux points reste constante). En biomécanique, le corps humain est modélisé comme une <b>chaîne de corps rigides reliés par des articulations</b>.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Rotation</span><p><b>Rotation</b> (tour) : mouvement où tous les points d'un corps rigide se déplacent en cercle, à distance fixe, autour d'un axe de rotation commun (fixe ou imaginaire).</p><p><b>Modèle du corps rigide</b> : tient compte de la forme et de la taille des corps ; les corps ne sont pas déformables (deux points quelconques gardent toujours la même distance). En biomécanique, le corps humain est souvent modélisé comme une <b>suite de corps rigides reliés par des articulations</b>.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Mouvement général = translation + rotation</span><span class="src">Kap.6 · p.6</span></div>
+  <img src="Resume_images/F9_p6.jpg" alt="Allgemeine Bewegung">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Rappel essentiel : les mouvements humains ne sont presque jamais des translations ou rotations pures, mais une <b>combinaison (superposition) des deux</b> = mouvement général. Le corps change alors à la fois de position <b>et</b> d'orientation.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Mouvement général</span><p>Les mouvements (humains) ne sont presque jamais de pures translations ou de pures rotations, mais une <b>combinaison (superposition) des deux</b>. → Le corps change à la fois de position et d'orientation.</p><p>Tout mouvement d'un corps rigide peut se décrire comme une combinaison de translation et de rotation (= <b>mouvement général</b>).</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Mouvements humains = rotations articulaires</span><span class="src">Kap.6 · p.9</span></div>
+  <img src="Resume_images/F9_p9.jpg" alt="Menschliche Bewegungen">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Idée centrale : tout mouvement humain actif (par contraction musculaire) naît d'une <b>rotation dans une ou plusieurs articulations</b>. Les articulations n'ont quasi que des <b>degrés de liberté en rotation</b>. Mais en coordonnant ces rotations (chaîne de segments), on produit aussi des <b>translations</b> (ex. le bassin qui monte/descend).</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Mouvements humains</span><p>Les mouvements actifs du corps humain, déclenchés par les contractions musculaires, naissent toujours d'une <b>rotation dans une ou plusieurs articulations</b>. → Les articulations n'ont en général que des <b>degrés de liberté en rotation</b>.</p><p>Grâce à la structure de notre appareil locomoteur (plusieurs segments et articulations), on peut toutefois obtenir des <b>mouvements de translation</b> par des rotations coordonnées dans les différentes articulations.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Degrés de liberté — chaîne cinétique</span><span class="src">Kap.6 · p.19</span></div>
+  <img src="Resume_images/F9_p19.jpg" alt="Freiheitsgrade Kette">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> En reliant les segments en <b>chaînes cinématiques</b>, on obtient des degrés de liberté en translation pour le corps entier. Conséquence : <b>plus il y a d'articulations (et de degrés de liberté) impliquées, plus le mouvement est difficile à contrôler</b>. (Rappel : corps rigide en 2D = 3 degrés de liberté, en 3D = 6.)</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Degrés de liberté — Chaîne cinétique</span><p>En reliant les membres du corps en <b>chaînes cinématiques/cinétiques</b>, des degrés de liberté en translation deviennent possibles pour des parties du corps ou le corps entier.</p><p>→ Plus il y a d'articulations (et de degrés de liberté par articulation) impliquées dans un mouvement, plus celui-ci est <b>difficile à contrôler</b>.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Grandeurs translation vs rotation — Cinématique</span><span class="src">Kap.6 · p.22</span></div>
+  <img src="Resume_images/F9_p22.jpg" alt="Grössen Kinematik">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Le <b>tableau de traduction</b> cinématique : chemin↔angle, vitesse↔vitesse angulaire, accélération↔accélération angulaire. Comprendre l'analogie suffit (les angles s'expriment en radians dans les formules, mais aucun calcul n'est demandé).</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Grandeurs translation vs rotation — Cinématique</span><p>Tableau de correspondance :</p><ul><li>Chemin/position ↔ <b>Angle</b></li><li>Vitesse ↔ <b>Vitesse angulaire</b></li><li>Accélération ↔ <b>Accélération angulaire</b></li></ul></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Mouvement circulaire &amp; accélération centripète</span><span class="src">Kap.6 · p.26</span></div>
+  <img src="Resume_images/F9_p26.jpg" alt="Kreisbewegung">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Point contre-intuitif <b>à savoir absolument</b> : même dans un mouvement circulaire <b>uniforme</b> (vitesse constante en valeur), la vitesse est quand même <b>accélérée</b> car sa <b>direction change</b> en permanence. Cette accélération pointe vers le centre → <b>accélération centripète</b>.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Mouvement circulaire</span><p>Quand on considère un point qui se déplace sur une trajectoire circulaire, on parle de <b>mouvement circulaire</b> (translation).</p><p>→ Même dans un mouvement circulaire <b>uniforme</b>, la vitesse n'est <b>pas constante</b> mais accélérée, car sa <b>direction change</b>. → C'est l'<b>accélération centripète</b>.</p></div></details>
+  </div>
+</div>
+
+<h3 class="sub">Les slides « ! » du chapitre 6 — partie 2 (forces &amp; dynamique)</h3>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Force centripète</span><span class="src">Kap.6 · p.28</span></div>
+  <img src="Resume_images/F10_p1.jpg" alt="Zentripetalkraft">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> La <b>force centripète</b> est celle qui fournit l'accélération centripète : elle « <b>retient</b> » le corps sur sa trajectoire circulaire et pointe <b>vers le centre</b>. Si elle disparaît, le corps repart en <b>ligne droite tangentielle</b> (loi d'inertie). Ex. le marteau lâché par le lanceur.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Force centripète</span><p>La force qui fournit l'accélération centripète nécessaire dans un mouvement circulaire s'appelle la <b>force centripète</b>.</p><ul><li>Elle « <b>maintient</b> » le corps sur sa trajectoire circulaire.</li><li>Elle est dirigée <b>vers le centre du cercle</b>.</li><li>Si la force centripète disparaît, le corps continue (loi d'inertie) en ligne droite à la <b>vitesse tangentielle</b>.</li></ul></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Force centrifuge (force fictive)</span><span class="src">Kap.6 · p.29</span></div>
+  <img src="Resume_images/F10_p2.jpg" alt="Zentrifugalkraft">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> La <b>force centrifuge</b> (« force de fuite ») est une <b>force fictive / d'inertie</b> qui n'existe que dans un référentiel en rotation. Dirigée radialement <b>vers l'extérieur</b>. À vitesse angulaire constante, elle est égale et opposée à la centripète (équilibre dynamique). Bien comprendre : centripète = vraie force, centrifuge = effet d'inertie ressenti dans le référentiel tournant.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Force centrifuge</span><p>Sur tout corps situé dans un référentiel en rotation (accéléré) agit toujours une <b>force centrifuge</b> dirigée à l'opposé du centre de rotation.</p><ul><li><b>Force fictive</b> d'inertie lors des rotations et mouvements circulaires (« force de fuite »).</li><li>Dirigée <b>radialement vers l'extérieur</b>.</li><li>À vitesse angulaire constante, forces centrifuge et centripète sont <b>égales et opposées</b> (équilibre dynamique).</li></ul></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Grandeurs translation vs rotation — Dynamique</span><span class="src">Kap.6 · p.31</span></div>
+  <img src="Resume_images/F10_p4.jpg" alt="Grössen Dynamik">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Le <b>grand tableau de correspondance dynamique</b> : masse→<b>moment d'inertie</b>, force→<b>moment de force</b>, impulsion→<b>moment cinétique</b>, énergie cinétique→énergie de rotation. La pièce maîtresse du chapitre : tout ce que tu sais en translation a son équivalent en rotation.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Grandeurs translation vs rotation — Dynamique</span><p>Tableau de correspondance :</p><ul><li>Masse ↔ <b>Moment d'inertie</b></li><li>Force ↔ <b>Moment de force</b></li><li>Impulsion ↔ <b>Moment cinétique</b></li><li>Variation d'impulsion (impulsion de force) ↔ Variation de moment cinétique (impulsion de moment)</li><li>Énergie cinétique ↔ <b>Énergie de rotation</b></li><li>Travail ↔ Travail · Puissance ↔ Puissance</li></ul></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Moment de force = cause de la rotation</span><span class="src">Kap.6 · p.32</span></div>
+  <img src="Resume_images/F10_p5.jpg" alt="Drehmoment Ursache">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Une rotation apparaît quand la ligne d'action d'une force <b>ne passe pas</b> par le centre de masse → il se crée un <b>moment de force</b> (Drehmoment). <b>Le moment est à la rotation ce que la force est à la translation</b> : sa cause. (Moment = force × bras de levier, c.-à-d. distance perpendiculaire entre la ligne d'action et l'axe.)</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Le moment de force, cause de la rotation</span><p>Une rotation apparaît quand la ligne d'action d'une force <b>ne passe pas</b> par le centre de masse / point de rotation du corps. → Il se crée un <b>moment de force</b> (Drehmoment).</p><p>→ De façon analogue à la force pour les translations, le <b>moment de force est la cause des rotations</b>.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Leviers du corps humain</span><span class="src">Kap.6 · p.35</span></div>
+  <img src="Resume_images/F10_p8.jpg" alt="Hebel">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Les <b>moments dans les articulations</b> sont la cause de tout mouvement actif ; ils viennent des <b>forces musculaires</b> agissant sur le système de leviers du squelette. <b>Deux points clés</b> : la force ET le bras de levier dépendent de l'<b>angle articulaire</b> ; et le corps humain a souvent des <b>rapports de levier défavorables</b> (ex. le tendon d'Achille subit 3 à 3,5 × le poids du corps en courant).</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Leviers dans le corps humain</span><p>Les <b>moments dans les articulations</b> sont la cause de tout mouvement actif. Ils naissent des <b>forces musculaires</b> qui agissent sur le système de leviers formé par le squelette.</p><ul><li>La force ET le bras de levier dépendent de l'<b>angle articulaire</b> !</li><li>Dans le corps humain, les rapports de leviers sont souvent <b>très défavorables</b> !</li></ul><p class='mini'>(Citation : la force max du tendon d'Achille atteint 2,7× le poids du corps à la marche et 3,2–3,5× à la course.)</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Effet d'un moment = accélération angulaire</span><span class="src">Kap.6 · p.38</span></div>
+  <img src="Resume_images/F10_p11.jpg" alt="Drehmoment Wirkung">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Un moment de force provoque une <b>accélération angulaire</b> autour de l'axe. Celle-ci est <b>proportionnelle au moment</b> et <b>inversement proportionnelle au moment d'inertie</b> — exactement l'analogue de F = m·a en rotation. L'accélération angulaire se fait dans la direction du moment.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Moment de force — Effet</span><p>Un moment de force provoque une <b>accélération angulaire</b> du corps autour de l'axe de rotation.</p><ul><li>L'accélération angulaire est <b>proportionnelle au moment</b> et inversement proportionnelle au <b>moment d'inertie</b> du corps.</li><li>L'accélération angulaire se fait dans la <b>direction du moment</b>.</li></ul></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Moment d'inertie</span><span class="src">Kap.6 · p.39</span></div>
+  <img src="Resume_images/F10_p12.jpg" alt="Trägheitsmoment">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Le <b>moment d'inertie</b> = résistance d'un corps au changement de sa vitesse angulaire (l'analogue de la masse). <b>Il dépend de la répartition de la masse par rapport à l'axe</b> : plus la masse est <b>éloignée de l'axe</b>, plus le moment d'inertie est grand. (D'où le patineur qui ramène les bras pour tourner plus vite.)</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Moment d'inertie</span><p>Le <b>moment d'inertie</b> = inertie d'un corps vis-à-vis du changement de sa vitesse angulaire (analogue de la masse pour les translations). C'est une mesure de la résistance au changement d'une rotation autour d'un axe donné.</p><p>Il dépend de la <b>répartition de la masse par rapport à l'axe</b> : plus la masse est <b>éloignée de l'axe</b>, plus le moment d'inertie est grand.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Moment d'inertie dépend de l'axe</span><span class="src">Kap.6 · p.41</span></div>
+  <img src="Resume_images/F10_p14.jpg" alt="Trägheitsmoment Achse">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Un <b>même corps a des moments d'inertie différents selon l'axe</b> autour duquel il tourne. En gymnastique, le corps tourne plus facilement autour de certains axes que d'autres (groupé vs tendu). À comprendre visuellement.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Moment d'inertie — Axe</span><p>Le moment d'inertie d'un corps dépend donc de l'<b>axe de rotation</b>.</p><p>→ Un seul et même corps a des <b>moments d'inertie différents</b> selon l'axe autour duquel il tourne. (Illustré en gymnastique : groupé vs tendu.)</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Moment cinétique &amp; impulsion de moment</span><span class="src">Kap.6 · p.45</span></div>
+  <img src="Resume_images/F10_p17.jpg" alt="Drehimpuls">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Le <b>moment cinétique</b> (Drehimpuls) décrit l'état de rotation, comme l'impulsion pour la translation : = moment d'inertie × vitesse angulaire. Un moment de force appliqué pendant un certain temps produit une <b>variation de moment cinétique</b> (l'analogue de l'impulsion de force).</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Moment cinétique (Drehimpuls)</span><p>Le <b>moment cinétique</b> décrit, de façon analogue à l'impulsion pour les translations, l'état de mouvement d'un corps en rotation.</p><p>Le moment cinétique = produit du <b>moment d'inertie</b> et de la <b>vitesse angulaire</b>. Il est relié, via le rayon, à l'impulsion « tangentielle ».</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡⚡</span><span class="ttl">Conservation du moment cinétique — LA slide patineur</span><span class="src">Kap.6 · p.46</span></div>
+  <img src="Resume_images/F10_p19.jpg" alt="Drehimpulserhaltung">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> <b>Loi de conservation du moment cinétique</b> : sans moment de force extérieur, le moment cinétique total reste <b>constant</b>. La différence cruciale avec la translation : contrairement à la masse, <b>on peut modifier volontairement son moment d'inertie</b> pendant le mouvement (écarter/ramener les bras). Conséquence : <b>augmenter le moment d'inertie → ralentir la rotation, et inversement</b>. C'est le principe du patineur en pirouette (bras serrés = tourne vite). Slide classique d'examen.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Conservation du moment cinétique</span><ul><li>Une augmentation du moment d'inertie entraîne une <b>diminution de la vitesse angulaire</b>, et inversement.</li><li>Contrairement à la masse en translation, le <b>moment d'inertie peut être modifié volontairement</b> pendant le mouvement !</li></ul><p><b>Énoncé :</b> si aucun moment de force extérieur n'agit sur un système, le moment cinétique total (somme vectorielle de tous les moments cinétiques) est constant. (Principe de la pirouette du patineur.)</p></div></details>
+  </div>
+</div>
+</section>
+<div class="up"><a href="#c1">↑ haut</a></div>
+
+<!-- ============ CHAPITRE 7 ============ -->
+<section class="chapter" id="c7">
+<h2 class="chap"><span class="num">7</span>Cyclisme (Radfahren)</h2>
+<p class="lead">Chapitre d'application qui réunit tout : forces, puissance, frottement, rotation, transmission. Avantage du vélo : la puissance et les forces sont <b>faciles à mesurer directement</b> (jauges de contrainte sur les pédales), contrairement à la course.</p>
+
+<h3 class="sub">Les forces et la puissance</h3>
+<p>La vitesse d'un cycliste résulte de l'équilibre entre la <b>force motrice</b> et les forces qui s'y opposent : <b>résistance de l'air</b> (la principale à vitesse élevée), <b>résistance au roulement</b> (frottement), <b>poids</b> (composante le long de la pente), plus les forces en virage. <b>Pour rouler à vitesse constante, la puissance du cycliste doit exactement égaler la somme des « puissances de résistance ».</b></p>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Puissance en cyclisme — l'équilibre</span><span class="src">Kap.7 · p.5</span></div>
+  <img src="Resume_images/F11_p5.jpg" alt="Radfahren Leistung">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Le principe central du chapitre : <b>rouler à vitesse constante = puissance fournie égale à la somme de toutes les puissances de résistance</b> (air + roulement + pente). Si tu pousses plus que les résistances → tu accélères ; moins → tu ralentis. C'est l'application directe de la notion de puissance (ch. 4) au vélo.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Cyclisme — Puissance</span>
+<p>Pour rouler à <b>vitesse constante</b>, la puissance d'un cycliste doit être exactement <b>égale à la somme de toutes les « puissances de résistance »</b>.</p>
+<p><b>Traduction de la formule centrale :</b> P<sub>Fahrer</sub> = P<sub>Steig</sub> + P<sub>Luft</sub> + P<sub>Roll</sub>, c'est-à-dire :</p>
+<ul>
+<li><b>P<sub>Fahrer</sub></b> = puissance du <b>cycliste</b> (Fahrer = conducteur/cycliste).</li>
+<li><b>P<sub>Steig</sub></b> = puissance contre la <b>pente</b> (Steigung = montée) : = poids × vitesse verticale = force de pente × vitesse = m·g·sin(α)·v.</li>
+<li><b>P<sub>Luft</sub></b> = puissance contre la <b>résistance de l'air</b> (Luft = air) : = F<sub>Luft</sub> × v.</li>
+<li><b>P<sub>Roll</sub></b> = puissance contre le <b>frottement de roulement</b> : = F<sub>Roll</sub> × v.</li>
+</ul>
+<p><b>Sur le dessin du vélo :</b> F<sub>G</sub> = m·g = le poids (flèche rouge verticale) ; F<sub>Hang</sub> = F<sub>G</sub>·sin(α) = la composante du poids le long de la pente ; v = la vitesse le long de la route ; v<sub>vert</sub> = sin(α)·v = la composante verticale de la vitesse ; α = l'angle de la pente.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Résistance de l'air vs vitesse (la courbe)</span><span class="src">Kap.7 · p.10</span></div>
+  <img src="Resume_images/F11_p10.jpg" alt="Luftwiderstand Geschwindigkeit">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> <b>Graphique à comprendre.</b> La résistance de l'air augmente avec le <b>carré de la vitesse</b>, et la <b>puissance</b> nécessaire pour la vaincre avec le <b>cube de la vitesse</b> → la courbe explose vers le haut. Concrètement : doubler la vitesse exige bien plus que doubler la puissance. C'est pourquoi à haute vitesse, presque toute l'énergie part dans l'air (et pourquoi l'aérodynamisme est roi en cyclisme).</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Cyclisme — Résistance de l'air / vitesse</span>
+<p><b>Lecture du graphique</b> (axes : P (W) = puissance en watts ; v (km/h) = vitesse) :</p>
+<ul>
+<li><b>Luftwiderstand</b> (bleu) = <b>résistance de l'air</b> : la puissance pour la vaincre croît avec le <b>cube de la vitesse</b> (formule : P<sub>Luft</sub> = ½·c<sub>W</sub>·A·ρ<sub>Luft</sub>·(v−v<sub>Wind</sub>)²·v, où c<sub>W</sub> = coefficient aérodynamique, A = surface frontale, ρ<sub>Luft</sub> = densité de l'air, v<sub>Wind</sub> = vitesse du vent). La courbe explose vers le haut.</li>
+<li><b>Rollwiderstand</b> (rouge) = <b>résistance au roulement</b> : presque une droite, croît doucement (P<sub>Roll</sub> = m·g·cos(α)·c<sub>R</sub>·v).</li>
+<li><b>Total</b> (noir) = la somme des deux.</li>
+</ul>
+<p><b>Les repères clés :</b> à <b>16,5 km/h</b>, air et roulement se valent ; à ~33 km/h, l'air représente déjà <b>80 %</b> de la résistance totale et le roulement seulement <b>20 %</b>. Conclusion : <b>plus on va vite, plus l'aérodynamisme domine tout</b> — d'où position aéro, casques profilés et aspiration.</p></div></details>
+  </div>
+</div>
+
+<div class="card">
+<p><b>Effet de l'aspiration (Windschatten)</b> — bon à connaître, illustré par un tableau frappant : un coureur seul dépense ~163 W ; en tête de peloton ~144 W ; mais <b>caché dans le peloton, seulement ~37 W</b> ! L'abri aérodynamique fait économiser une énergie énorme.</p>
+</div>
+
+<h3 class="sub">Virage : les deux slides « ! » finales</h3>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Virage — l'inclinaison (Schräglage)</span><span class="src">Kap.7 · p.24</span></div>
+  <img src="Resume_images/F11_p24.jpg" alt="Kurvenfahrt">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Un cycliste doit <b>s'incliner</b> pour tenir un virage de façon stable. Vu de son <b>référentiel en rotation</b>, le cycliste est « au repos » : la force centrifuge (fictive) le pousse vers l'extérieur, et l'inclinaison permet à la résultante (poids + réaction du sol) de rester alignée pour ne pas basculer. Application directe des forces centripète/centrifuge du chapitre 6.</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Cyclisme — Virage</span><p>Un cycliste a besoin d'une <b>inclinaison</b> (Schräglage) pour rouler de façon stable dans un virage.</p><p>→ Dans le <b>référentiel en rotation</b>, le cycliste est « au repos » : l'inclinaison équilibre la force centrifuge (fictive) pour éviter de basculer.</p></div></details>
+  </div>
+</div>
+
+<div class="bang">
+  <div class="head"><span class="ic">⚡</span><span class="ttl">Virage, frottement &amp; dévers (Überhöhung)</span><span class="src">Kap.7 · p.25</span></div>
+  <img src="Resume_images/F11_p25.jpg" alt="Kurvenfahrt Reibung">
+  <div class="exp">
+    <p><span class="tag must">⚡ SLIDE !</span> Pour ne pas <b>glisser latéralement</b> en virage, la somme de toutes les forces doit être nulle : c'est la <b>force de frottement</b> (adhérence pneu-sol) qui fournit la force centripète nécessaire. Si le frottement est insuffisant (sol mouillé, trop de vitesse) → dérapage. Le <b>dévers</b> (relèvement de la piste) aide en réorientant la force normale vers le centre. Boucle bouclée avec le chapitre 4 (frottement) et le chapitre 6 (rotation).</p>
+  
+    <details class="trad" open><summary><span class="chev">▾</span></summary><div class="body"><span class='t'>Cyclisme — Virage, frottement et dévers</span><p>Pour ne pas <b>glisser latéralement</b> dans le virage, la somme de toutes les forces doit aussi être nulle.</p><p>→ C'est la <b>force de frottement</b> (adhérence pneu-sol) qui fournit la force centripète nécessaire. Le <b>dévers</b> (Überhöhung, relèvement de la piste) aide en réorientant la force normale vers le centre.</p></div></details>
+  </div>
+</div>
+
+<div class="card">
+<p><b>Transmission &amp; règle d'or</b> (hors « ! » mais utile) : « <b>ce qu'on économise en force, on le paie en chemin</b> » (Galilée). Petit braquet = moins de force mais plus de cadence. Le rapport de transmission (ex. 34/21 ≈ 1,6) relie un tour de pédalier à 1,6 tour de roue arrière. La roue qui roule = translation de l'axe + rotation autour de l'axe ; le point de contact au sol a une vitesse <b>nulle</b> par rapport au sol → c'est là qu'agit la <b>force d'adhérence</b> qui permet d'accélérer.</p>
+</div>
+</section>
+<div class="up"><a href="#c1">↑ haut</a></div>
+
+<!-- ============ CHEAT SHEET ============ -->
+<section class="chapter" id="cheat">
+<h2 class="chap"><span class="num">🎯</span>Fiche express — à relire la veille</h2>
+<p class="lead">Les réflexes qui rapportent des points, condensés.</p>
+
+<div class="card">
+<b>Les distinctions à ne pas rater</b>
+<ul class="clean">
+<li><b>Cinématique</b> = COMMENT (sans forces) · <b>Dynamique</b> = POURQUOI (avec forces).</li>
+<li><b>Translation</b> (même vitesse pour tous les points) · <b>Rotation</b> (même vitesse angulaire) · <b>Mouvement général</b> = les deux.</li>
+<li><b>Scalaire</b> (valeur seule) · <b>Vectoriel</b> (valeur + direction : vitesse, accélération, force, moment).</li>
+</ul>
+</div>
+
+<div class="card newton">
+<b>Les 3 lois de Newton (par cœur)</b>
+<ul class="clean">
+<li><b>1. Inertie</b> : sans force résultante, le corps garde son état (repos / mouvement rectiligne uniforme).</li>
+<li><b>2. F = m·a</b> : l'accélération est proportionnelle à la force ; relie dynamique et cinématique.</li>
+<li><b>3. Action-réaction</b> : forces par paires, égales et opposées → conservation de l'impulsion.</li>
+</ul>
+</div>
+
+<div class="card">
+<b>Lire un graphique de mouvement (revient partout)</b>
+<ul class="clean">
+<li><b>Pente</b> d'une courbe = grandeur du dessus (pente de position = vitesse ; pente de vitesse = accélération).</li>
+<li><b>Aire sous la courbe</b> = grandeur du dessous (aire sous a = vitesse ; aire sous v = déplacement ; aire sous force-temps = impulsion ; aire sous force-déplacement = travail).</li>
+<li>Uniforme : a=0, v=cste, x=droite. Accéléré : a=cste, v=droite, x=parabole.</li>
+</ul>
+</div>
+
+<div class="card">
+<b>Les lois de conservation</b>
+<ul class="clean">
+<li><b>Impulsion</b> : sans force extérieure, l'impulsion totale est constante (vaut pour TOUS les chocs).</li>
+<li><b>Énergie</b> : dans un système fermé, l'énergie totale est constante (se transforme, ne se perd pas).</li>
+<li><b>Moment cinétique</b> : sans moment extérieur, il est constant → on change sa vitesse de rotation en changeant son moment d'inertie (patineur).</li>
+</ul>
+</div>
+
+<div class="card">
+<b>Le tableau translation ↔ rotation</b>
+<ul class="clean">
+<li>masse ↔ moment d'inertie · force ↔ moment de force · impulsion ↔ moment cinétique.</li>
+<li>Moment d'inertie ↑ quand la masse s'éloigne de l'axe.</li>
+<li>Mouvement circulaire uniforme = quand même accéléré (direction qui change → accélération centripète).</li>
+</ul>
+</div>
+
+<div class="card">
+<b>Pièges &amp; idées « intelligentes »</b>
+<ul class="clean">
+<li>Frottement : <b>adhérence &gt; glissement &gt;&gt; roulement</b>. Sans frottement, pas de marche ni de sport.</li>
+<li>Réduire une force de choc = <b>allonger la durée</b> (amortir la réception, impulsion de force).</li>
+<li>Travail musculaire ≫ travail mécanique externe (isométrique = effort sans mouvement).</li>
+<li>Force centrifuge = fictive (référentiel tournant) ; centripète = la vraie force vers le centre.</li>
+<li>Cyclisme : résistance de l'air ∝ v², puissance ∝ v³ → l'aéro domine à haute vitesse.</li>
+</ul>
+</div>
+</section>
+<div class="up"><a href="#c1">↑ haut</a></div>
+</div>
+<footer>
+  Résumé généré à partir des 11 PDF du cours · Images = captures directes des slides originales.<br>
+  Bon courage pour demain, Julien 💪
+</footer>
+<script>
+const prog=document.getElementById('prog');
+addEventListener('scroll',()=>{const h=document.documentElement;
+  const sc=(h.scrollTop)/(h.scrollHeight-h.clientHeight)*100;prog.style.width=sc+'%';});
+// scroll-spy: surligne le chapitre courant dans le menu
+const navLinks=[...document.querySelectorAll('nav.quicknav a[href^="#"]')];
+const sections=navLinks.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+function spy(){
+  let cur=sections[0];
+  for(const s of sections){if(s.getBoundingClientRect().top<140)cur=s;}
+  navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur.id));
+}
+addEventListener('scroll',spy);spy();
+</script>
+</body>
+</html>

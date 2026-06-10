@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz — Biomécanique du mouvement I</title>
+<style>
+:root{
+  --bg:#0f1620;--surface:#16202d;--surface2:#1c2836;--ink:#e8edf3;--muted:#9fb0c2;
+  --line:#2a3a4d;--primary:#43b3c9;--primary2:#2e8aa0;--accent:#ffb454;--green:#5fd08a;
+  --red:#ff6b6b;--bang:#ffd33d;--radius:14px;--shadow:0 6px 22px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(160deg,#0c121b,#12202c);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.6;font-size:17px}
+.progress{position:fixed;top:0;left:0;height:4px;width:0;z-index:300;
+  background:linear-gradient(90deg,var(--primary),var(--accent))}
+header.top{padding:40px 24px 26px;text-align:center;
+  background:radial-gradient(900px 300px at 50% -40%,rgba(67,179,201,.25),transparent),linear-gradient(180deg,#13202d,#0f1822)}
+header.top .code{letter-spacing:.22em;text-transform:uppercase;font-size:.72rem;color:var(--primary);font-weight:700}
+header.top h1{margin:.25em 0 .15em;font-size:1.9rem}
+header.top p{color:var(--muted);margin:.2em auto;max-width:640px}
+.nav{position:sticky;top:0;z-index:200;display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+  padding:10px 16px;background:rgba(12,18,27,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:600;padding:5px 12px;border-radius:18px}
+.nav a:hover{color:var(--ink);background:var(--surface2)}
+.nav a.guide{background:var(--primary);color:#06121a}
+.nav .sp{flex:1}
+.wrap{max-width:820px;margin:0 auto;padding:22px 18px 80px}
+.bar{position:sticky;top:52px;z-index:150;background:var(--surface);border:1px solid var(--line);
+  border-radius:12px;padding:12px 16px;margin-bottom:18px;box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.bar .score{font-weight:700;font-size:1.05rem}
+.bar .score b{color:var(--green)}
+.bar .meter{flex:1;min-width:120px;height:9px;background:var(--surface2);border-radius:10px;overflow:hidden}
+.bar .meter>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--green));transition:width .3s}
+.bar button{background:var(--surface2);border:1px solid var(--primary2);color:#bfe9f2;border-radius:18px;
+  padding:6px 14px;font-size:.8rem;cursor:pointer;font-weight:600}
+.bar button:hover{background:var(--primary2);color:#06121a}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 20px;margin:14px 0;box-shadow:var(--shadow)}
+.q .meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.q .num{font-weight:700;color:var(--primary)}
+.q .chap{font-size:.7rem;font-weight:700;background:var(--surface2);border:1px solid var(--line);
+  color:var(--muted);padding:2px 10px;border-radius:20px}
+.q .qtext{font-weight:600;margin:4px 0 12px}
+.opt{display:block;width:100%;text-align:left;background:var(--surface2);border:1px solid var(--line);
+  color:var(--ink);border-radius:10px;padding:11px 14px;margin:7px 0;cursor:pointer;font-size:.97rem;
+  transition:.12s;display:flex;gap:10px;align-items:flex-start}
+.opt:hover:not(:disabled){border-color:var(--primary);background:#21303f}
+.opt .letter{font-weight:700;color:var(--primary);flex-shrink:0}
+.opt:disabled{cursor:default}
+.opt.correct{border-color:var(--green);background:rgba(95,208,138,.16)}
+.opt.correct .letter{color:var(--green)}
+.opt.wrong{border-color:var(--red);background:rgba(255,107,107,.14)}
+.opt.wrong .letter{color:var(--red)}
+.exp{margin-top:12px;border-left:4px solid var(--primary);background:#0e1a24;border-radius:0 10px 10px 0;
+  padding:11px 14px;font-size:.93rem;display:none}
+.exp.show{display:block}
+.exp .verdict{font-weight:700;margin-bottom:4px}
+.exp .verdict.ok{color:var(--green)}
+.exp .verdict.no{color:var(--red)}
+#result{display:none;background:linear-gradient(135deg,#10283a,#102230);border:1px solid var(--primary2);
+  border-radius:var(--radius);padding:26px;text-align:center;margin:18px 0;box-shadow:var(--shadow)}
+#result.show{display:block}
+#result h2{margin:.1em 0;font-size:1.6rem}
+#result .big{font-size:2.6rem;font-weight:800;color:var(--green);margin:.1em 0}
+#result p{color:var(--muted)}
+#result button{margin-top:14px;background:var(--accent);border:none;color:#3a2c00;border-radius:22px;
+  padding:10px 22px;font-weight:700;cursor:pointer;font-size:.95rem}
+footer{color:var(--muted);text-align:center;padding:26px;border-top:1px solid var(--line);margin-top:30px;font-size:.84rem}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<header class="top">
+  <div class="code">SSP.00760 · Quiz d'auto-évaluation</div>
+  <h1>Quiz — Biomécanique du mouvement I</h1>
+  <p>50 questions sur les 7 chapitres. Choisis une réponse : elle se corrige aussitôt avec l'explication en dessous. Questions et réponses sont mélangées à chaque chargement.</p>
+</header>
+<nav class="nav">
+  <a href="#" onclick="location.reload();return false">🔀 Recommencer</a>
+  <a href="#result-anchor">📊 Mon score</a>
+  <span class="sp"></span>
+  <a href="Examen_blanc_Biomecanique_I.html" style="background:var(--bang);color:#3a2c00">📝 Examen blanc</a>
+  <a href="Resume_Biomecanique_I.html" class="guide">📘 Résumé</a>
+</nav>
+<div class="wrap">
+  <div class="bar">
+    <span class="score">Score : <b id="sc">0</b> / <span id="tot">50</span></span>
+    <span class="meter"><i id="meter"></i></span>
+    <span id="answered" class="score" style="font-weight:500;color:var(--muted);font-size:.85rem">0 répondues</span>
+    <button onclick="location.reload()">Réinitialiser</button>
+  </div>
+  <div id="quiz"></div>
+  <div id="result-anchor"></div>
+  <div id="result">
+    <h2>Quiz terminé ! 🎉</h2>
+    <div class="big" id="finalscore">0 / 50</div>
+    <p id="msg"></p>
+    <button onclick="location.reload()">🔀 Refaire le quiz</button>
+  </div>
+</div>
+<footer>Quiz généré à partir du résumé du cours · Bonne révision, Julien 💪</footer>
+<script>
+const DATA = [{"q": "Que signifie le terme « biomécanique » (origine grecque) ?", "opts": ["L'application des principes mécaniques aux systèmes vivants", "L'étude des forces dans les machines et moteurs industriels", "La biologie appliquée à la performance sportive de pointe", "La chimie des contractions du tissu musculaire strié"], "a": 0, "e": "Bios = la vie. La biomécanique applique les principes de la mécanique pour décrire, analyser et évaluer les systèmes biologiques et les forces qui y agissent.", "c": "Ch.1-2"}, {"q": "Quelle est la différence fondamentale entre cinématique et dynamique ?", "opts": ["La cinématique étudie les rotations, la dynamique les translations", "La cinématique décrit comment ça bouge, la dynamique pourquoi", "La cinématique concerne les solides, la dynamique les fluides", "La cinématique est qualitative, la dynamique est quantitative"], "a": 1, "e": "Cinématique = description géométrique du mouvement sans tenir compte des forces (COMMENT). Dynamique = mouvement en fonction des forces qui agissent (POURQUOI).", "c": "Ch.1-2"}, {"q": "En translation pure, qu'ont en commun tous les points du corps à un instant donné ?", "opts": ["La même position au même instant dans l'espace", "La même vitesse et la même accélération", "La même distance par rapport à l'axe de rotation", "La même énergie cinétique, mais rien d'autre"], "a": 1, "e": "En translation, tous les points suivent des trajectoires identiques et ont à chaque instant la même vitesse et la même accélération. D'où l'intérêt de ne décrire qu'un seul point (le centre de gravité).", "c": "Ch.1-2"}, {"q": "Selon le cours, qu'est-ce qui cause toute action observable (mouvement ou déformation) ?", "opts": ["Une force", "La masse du corps", "L'énergie potentielle", "La vitesse initiale"], "a": 0, "e": "Principe central du cours : tout effet observable (mouvement ou déformation d'un corps) est causé par une force.", "c": "Ch.1-2"}, {"q": "Comment se caractérise une rotation pure ?", "opts": ["Le corps change de position mais garde son orientation", "Tous les points ont la même vitesse tangentielle", "Le corps change d'orientation mais garde sa position", "Tous les points décrivent des droites parallèles"], "a": 2, "e": "En rotation pure, le corps change d'orientation sans changer de position. Tous les points ont la même vitesse angulaire, mais des vitesses tangentielles différentes selon leur distance à l'axe.", "c": "Ch.1-2"}, {"q": "Une grandeur vectorielle se distingue d'une grandeur scalaire car elle possède :", "opts": ["Seulement une valeur numérique", "Une valeur et une direction", "Uniquement une direction", "Plusieurs unités de mesure"], "a": 1, "e": "Une grandeur vectorielle a une valeur (norme) et une direction (ex. vitesse, force). Une scalaire n'a qu'une valeur (ex. fréquence, travail, puissance).", "c": "Ch.3"}, {"q": "Sur un graphique position-temps, à quoi correspond la vitesse instantanée ?", "opts": ["À l'aire sous la courbe", "À la pente de la tangente à la courbe", "À la hauteur du point sur la courbe", "À la longueur totale de la courbe"], "a": 1, "e": "La vitesse instantanée = pente de la tangente à la courbe position-temps (la dérivée de la position).", "c": "Ch.3"}, {"q": "Sur un graphique accélération-temps, à quoi correspond l'aire sous la courbe ?", "opts": ["À la position atteinte", "À la variation de vitesse", "À la force résultante", "À la masse du corps"], "a": 1, "e": "L'aire sous la courbe d'accélération donne la variation de vitesse ; l'aire sous la courbe de vitesse donne le déplacement.", "c": "Ch.3"}, {"q": "Pourquoi dit-on que la vitesse dépend du référentiel ?", "opts": ["Parce qu'elle se mesure par rapport à un système choisi", "Parce qu'elle constitue en réalité une forme de force", "Parce qu'elle demeure invariante quel que soit le point", "Parce qu'elle ne change jamais au cours du déplacement"], "a": 0, "e": "La vitesse est relative : une voiture à 50 km/h l'est par rapport à la Terre. L'accélération, elle, est invariante (sauf référentiel accéléré).", "c": "Ch.3"}, {"q": "Dans un mouvement uniforme, que valent la vitesse et l'accélération ?", "opts": ["Vitesse constante, accélération nulle", "Vitesse nulle, accélération constante", "Vitesse croissante, accélération croissante", "Vitesse et accélération toutes deux nulles"], "a": 0, "e": "Mouvement uniforme = vitesse constante (valeur et direction) → accélération nulle → aucune force résultante (principe d'inertie).", "c": "Ch.3"}, {"q": "Dans un mouvement uniformément accéléré, quelle est la forme de la courbe position-temps ?", "opts": ["Une droite horizontale", "Une droite croissante", "Une parabole", "Un cercle"], "a": 2, "e": "Accélération constante → vitesse = droite croissante → position = parabole.", "c": "Ch.3"}, {"q": "Qu'est-ce que la chute libre en mécanique ?", "opts": ["Un mouvement où seule la pesanteur agit", "Un mouvement à vitesse constante vers le bas", "Une chute freinée par la résistance de l'air", "Un mouvement strictement horizontal"], "a": 0, "e": "Chute libre = seule la pesanteur agit. L'accélération est alors constante et indépendante de la masse, de la forme et du matériau.", "c": "Ch.3"}, {"q": "Que dit le principe d'indépendance (superposition) des mouvements ?", "opts": ["Les mouvements partiels s'annulent toujours entre eux", "Les mouvements partiels se superposent sans s'influencer", "Un seul mouvement partiel est possible à la fois", "Les mouvements partiels ne s'additionnent qu'à l'arrêt"], "a": 1, "e": "Les mouvements partiels d'un corps se superposent indépendamment. C'est ce qui permet de décomposer un mouvement complexe en mouvements simples.", "c": "Ch.3"}, {"q": "Le tir oblique est la superposition de quels deux mouvements ?", "opts": ["Deux rotations autour du centre de gravité", "Un mouvement uniforme en x et accéléré en y", "Deux chutes libres perpendiculaires", "Un mouvement uniforme en x et uniforme en y"], "a": 1, "e": "Tir oblique = mouvement uniforme horizontal (vitesse initiale) + mouvement uniformément accéléré vertical (pesanteur). Résultat : une parabole.", "c": "Ch.3"}, {"q": "Quelle trajectoire décrit le centre de gravité lors d'un saut ?", "opts": ["Une ligne droite", "Un cercle", "Une parabole", "Une spirale"], "a": 2, "e": "Comme tout projectile soumis à la seule pesanteur, le centre de gravité suit une parabole (cas du tir oblique).", "c": "Ch.3"}, {"q": "Que décrit la 1re loi de Newton (loi d'inertie) ?", "opts": ["La force est le produit de la masse et de l'accélération", "Sans force résultante, un corps garde son état de mouvement", "Les forces apparaissent toujours par paires opposées", "L'énergie totale d'un système isolé se conserve"], "a": 1, "e": "Loi d'inertie : un corps conserve son état (repos ou mouvement rectiligne uniforme) tant qu'aucune force résultante ne l'oblige à changer.", "c": "Ch.4"}, {"q": "Selon la 3e loi de Newton (action-réaction), les forces :", "opts": ["Elles n'agissent jamais qu'une seule à la fois sur un corps", "Elles apparaissent par paires, égales et opposées", "Elles finissent toujours par s'annuler globalement", "Elles augmentent au fil du temps qui passe"], "a": 1, "e": "Action-réaction : si A exerce une force sur B, B exerce sur A une force égale, opposée, sur la même ligne d'action. Base de la conservation de l'impulsion.", "c": "Ch.4"}, {"q": "Que représente la masse d'un corps en dynamique ?", "opts": ["Sa vitesse limite atteignable", "Son inertie face à l'accélération", "Sa température interne moyenne", "Sa charge électrique propre"], "a": 1, "e": "La masse détermine l'inertie : la force nécessaire pour accélérer le corps. C'est la grandeur de base de la dynamique.", "c": "Ch.4"}, {"q": "Si la ligne d'action d'une force ne passe PAS par le centre de masse, on obtient :", "opts": ["Une translation pure, sans aucune rotation du corps", "Une translation accompagnée d'une rotation du corps", "Aucun mouvement, le corps reste parfaitement immobile", "Une force résultante strictement nulle sur le corps"], "a": 1, "e": "Ligne d'action passant par le centre de masse → translation pure. Sinon → translation + rotation (modèle du corps rigide).", "c": "Ch.4"}, {"q": "La force de frottement agit toujours :", "opts": ["Perpendiculairement à la surface de contact", "Parallèlement à la surface, opposée au mouvement", "Verticalement vers le centre de la Terre", "Dans le même sens que le mouvement"], "a": 1, "e": "Le frottement agit parallèlement à la surface de contact et s'oppose au mouvement. À ne pas confondre avec la force normale, qui est perpendiculaire.", "c": "Ch.4"}, {"q": "Pourquoi la marche serait-elle impossible sans frottement ?", "opts": ["Parce qu'on ne distinguerait plus correctement le sol", "Parce qu'aucune force de réaction ne permettrait de pousser", "Parce que les muscles cesseraient complètement de fonctionner", "Parce que la gravité finirait par s'annuler au niveau du sol"], "a": 1, "e": "Sans frottement, impossible d'exercer une force latérale sur le sol : pas de réaction, donc pas de propulsion. Même marcher deviendrait impossible.", "c": "Ch.4"}, {"q": "Qu'est-ce que l'impulsion (quantité de mouvement) d'un corps ?", "opts": ["Le produit de la masse et de la vitesse", "Le produit de la force et de la distance", "Le produit de la masse et de l'accélération", "Le carré de la vitesse instantanée"], "a": 0, "e": "L'impulsion p = m·v décrit l'état de mouvement rectiligne. Toute force provoque une variation d'impulsion dans le temps.", "c": "Ch.4"}, {"q": "Que dit la loi de conservation de l'impulsion ?", "opts": ["L'impulsion totale d'un système croît avec le temps", "Sans force extérieure, l'impulsion totale reste constante", "L'impulsion se transforme entièrement en énergie thermique", "L'impulsion dépend directement de la forme des corps"], "a": 1, "e": "Sans force extérieure, l'impulsion totale (somme vectorielle) est conservée avant et après un choc. Cela vaut pour TOUS les types de chocs.", "c": "Ch.4"}, {"q": "Pour quel type de choc la conservation de l'impulsion est-elle valable ?", "opts": ["Uniquement les chocs parfaitement élastiques", "Uniquement les chocs parfaitement inélastiques", "Tous les types de chocs sans exception", "Aucun des chocs réels rencontrés"], "a": 2, "e": "La conservation de l'impulsion vaut pour TOUTES les formes de chocs (élastique, inélastique, réel). C'est ce qui la rend si puissante.", "c": "Ch.4"}, {"q": "Qu'est-ce que le travail physique ?", "opts": ["L'énergie transférée par une force le long d'un chemin", "La force exercée indépendamment de tout déplacement réel", "Le produit de la vitesse du corps et du temps écoulé", "L'énergie que possède un corps maintenu au repos complet"], "a": 0, "e": "Travail = force × chemin parcouru (dans la direction du déplacement) = énergie transférée. Sur un graphique force-déplacement, c'est l'aire sous la courbe.", "c": "Ch.4"}, {"q": "Pourquoi le travail musculaire diffère-t-il du travail mécanique externe ?", "opts": ["Les deux sont en réalité toujours identiques", "Un muscle peut dépenser de l'énergie sans mouvement", "Un muscle ne consomme jamais d'énergie au repos", "Le travail mécanique externe est toujours plus grand"], "a": 1, "e": "Maintenir une tension (isométrique) consomme de l'ATP sans mouvement externe. Le travail musculaire est en général bien supérieur au travail mécanique externe.", "c": "Ch.4"}, {"q": "Quelle particularité a l'énergie potentielle par rapport aux autres formes ?", "opts": ["Elle vaut toujours zéro au point de départ du mouvement", "Son point zéro est arbitraire, seule sa variation compte", "Elle ne dépend jamais de la hauteur à laquelle on est", "Elle prend systématiquement des valeurs négatives"], "a": 1, "e": "Contrairement aux énergies cinétique et élastique, le zéro de l'énergie potentielle est arbitraire : seule sa variation a un sens physique.", "c": "Ch.4"}, {"q": "Comment définit-on la puissance ?", "opts": ["Le travail ou l'énergie par unité de temps", "Le produit de la force et de la masse", "L'énergie totale contenue dans un système", "La distance parcourue par le corps"], "a": 0, "e": "Puissance = travail/temps. Plus une force agit vite, plus la puissance est grande. En translation : puissance = force × vitesse.", "c": "Ch.4"}, {"q": "Pendant la phase de vol d'un saut, le centre de gravité effectue :", "opts": ["Un mouvement à vitesse constante", "Un mouvement uniformément accéléré vertical", "Une rotation pure autour de son axe", "Un arrêt complet au sommet"], "a": 1, "e": "En vol, le centre de gravité fait un mouvement uniformément accéléré (g vers le bas) : c'est un cas particulier du tir oblique, vitesse verticale.", "c": "Ch.5"}, {"q": "À quoi sert principalement une plateforme de force (Kraftmessplatte) ?", "opts": ["À mesurer la température corporelle", "À mesurer les forces de réaction du sol", "À mesurer le rythme cardiaque", "À mesurer l'altitude de saut"], "a": 1, "e": "La plateforme de force mesure les forces de réaction du sol (et les moments) via des capteurs dans chaque coin. Usage : marche, équilibre, saut.", "c": "Ch.5"}, {"q": "Sur le graphique CMJ, comment passe-t-on de l'accélération à la vitesse puis à la hauteur ?", "opts": ["En dérivant la courbe deux fois", "En intégrant deux fois (aire sous les courbes)", "En multipliant chaque valeur par la masse", "En additionnant les trois courbes entre elles"], "a": 1, "e": "On intègre l'accélération pour obtenir la vitesse, puis on intègre la vitesse pour obtenir la hauteur (double intégration, principe de l'aire sous la courbe).", "c": "Ch.5"}, {"q": "Que dit le « paradoxe du travail nul » (zero work paradox) en course à pied ?", "opts": ["Courir à allure constante ne fatigue absolument pas", "Le travail mécanique net est nul mais coûte de l'énergie", "La course ne consomme aucune énergie chimique du corps", "Le travail externe reste toujours à son maximum possible"], "a": 1, "e": "À vitesse constante sur le plat, le travail mécanique externe net = 0, pourtant courir coûte de l'énergie (freinage/ré-accélération à chaque appui, rendement musculaire bas, etc.).", "c": "Ch.5"}, {"q": "À quoi sert la dynamique inverse en biomécanique ?", "opts": ["À mesurer directement les forces dans les articulations", "À estimer les forces articulaires à partir du mouvement", "À filmer simplement les déplacements des segments", "À calculer la vitesse du vent relatif sur l'athlète"], "a": 1, "e": "Les forces/moments articulaires ne se mesurent pas directement : on les estime par dynamique inverse (corps modélisé en segments rigides). Un modèle reste une simplification.", "c": "Ch.5"}, {"q": "Comment réduire la force de freinage lors d'une réception de saut ?", "opts": ["En atterrissant les jambes tendues", "En allongeant la durée du freinage", "En augmentant la vitesse d'arrivée au sol", "En sautant le plus haut possible"], "a": 1, "e": "La réception est un choc inélastique. Pour la même variation d'impulsion, allonger la durée du freinage réduit la force (amortir, plier les genoux, semelles, tapis).", "c": "Ch.5"}, {"q": "Comment calcule-t-on la vitesse de course à partir des paramètres de foulée ?", "opts": ["Longueur de foulée divisée par la fréquence", "Longueur de foulée multipliée par la fréquence", "Fréquence divisée par la longueur de foulée", "Longueur de foulée ajoutée au temps de vol"], "a": 1, "e": "Vitesse = longueur de foulée × fréquence de foulée. Ces paramètres spatio-temporels se mesurent par systèmes optiques (OptoGait).", "c": "Ch.5"}, {"q": "En rotation, quel est l'équivalent de la masse (en translation) ?", "opts": ["Le moment de force", "Le moment d'inertie", "Le moment cinétique", "La vitesse angulaire"], "a": 1, "e": "Tableau de correspondance : masse ↔ moment d'inertie. Il mesure la résistance d'un corps au changement de sa vitesse angulaire.", "c": "Ch.6"}, {"q": "De quoi dépend le moment d'inertie d'un corps ?", "opts": ["Uniquement de la masse totale du corps", "De la répartition de la masse autour de l'axe", "De la couleur et de la texture du corps", "De la vitesse de rotation instantanée"], "a": 1, "e": "Le moment d'inertie dépend de la répartition de la masse autour de l'axe : plus la masse est éloignée de l'axe, plus il est grand (patineur bras écartés).", "c": "Ch.6"}, {"q": "Qu'est-ce qui cause une rotation (l'équivalent de la force) ?", "opts": ["Le moment de force", "La vitesse angulaire", "L'énergie cinétique", "La masse du corps"], "a": 0, "e": "Le moment de force est à la rotation ce que la force est à la translation : sa cause. Il apparaît quand la ligne d'action ne passe pas par le centre de masse.", "c": "Ch.6"}, {"q": "Même dans un mouvement circulaire UNIFORME, pourquoi y a-t-il une accélération ?", "opts": ["Parce que la valeur de la vitesse augmente régulièrement", "Parce que la direction de la vitesse change sans cesse", "Parce que la masse du corps varie pendant le tour", "Parce qu'il n'y a en réalité aucune accélération du tout"], "a": 1, "e": "La vitesse est un vecteur : même si sa valeur est constante, sa direction change continuellement → accélération centripète, dirigée vers le centre.", "c": "Ch.6"}, {"q": "Quelle est la nature de la force centrifuge ?", "opts": ["Une force réelle dirigée vers le centre", "Une force fictive dirigée vers l'extérieur", "La force de gravité terrestre", "Une forme de force de frottement"], "a": 1, "e": "La force centrifuge est une force fictive d'inertie, ressentie dans un référentiel tournant, dirigée vers l'extérieur. La vraie force (centripète) pointe vers le centre.", "c": "Ch.6"}, {"q": "Que peut-on modifier volontairement en rotation, contrairement à la masse en translation ?", "opts": ["Le moment cinétique total du corps en mouvement", "Le moment d'inertie, en bougeant ses segments", "La vitesse de la lumière dans le milieu ambiant", "L'intensité du champ de gravité à cet endroit"], "a": 1, "e": "On peut changer son moment d'inertie pendant le mouvement (écarter/ramener les bras). Comme le moment cinétique se conserve, cela modifie la vitesse de rotation.", "c": "Ch.6"}, {"q": "Pourquoi un patineur tourne-t-il plus vite en ramenant les bras ?", "opts": ["Il pousse simplement plus fort contre la surface de glace", "Son moment d'inertie diminue, sa vitesse angulaire augmente", "La force centrifuge vient l'accélérer vers l'extérieur", "Le frottement de l'air sur son corps diminue nettement"], "a": 1, "e": "Conservation du moment cinétique : en ramenant les bras, il réduit son moment d'inertie → sa vitesse angulaire augmente pour garder le moment cinétique constant.", "c": "Ch.6"}, {"q": "Dans le corps humain, comment naissent les mouvements actifs ?", "opts": ["Par des translations directes appliquées sur les os", "Par des rotations dans une ou plusieurs articulations", "Par la contraction directe des organes internes", "Sans qu'aucune force musculaire ne soit nécessaire"], "a": 1, "e": "Tout mouvement humain actif naît d'une rotation articulaire (les articulations ont surtout des degrés de liberté en rotation). Coordonnées, ces rotations donnent des translations.", "c": "Ch.6"}, {"q": "Que se passe-t-il avec les leviers musculaires dans le corps humain ?", "opts": ["Ils restent toujours dans la position la plus optimale", "La force et le bras de levier varient selon l'angle", "Ils ne dépendent absolument d'aucun paramètre externe", "Ils suppriment tout besoin de produire de la force"], "a": 1, "e": "Force et bras de levier dépendent de l'angle articulaire ; le corps a souvent des rapports de leviers défavorables (ex. tendon d'Achille : 3-3,5× le poids du corps en courant).", "c": "Ch.6"}, {"q": "Pour rouler à vitesse constante à vélo, la puissance du cycliste doit :", "opts": ["Être strictement nulle pendant tout le déplacement", "Égaler la somme de toutes les puissances de résistance", "Rester en permanence à sa valeur maximale possible", "Diminuer progressivement à mesure que l'on accélère"], "a": 1, "e": "À vitesse constante : puissance fournie = somme des puissances de résistance (air, roulement, pente). Pousser plus → accélérer ; moins → ralentir.", "c": "Ch.7"}, {"q": "Comment évolue la puissance nécessaire pour vaincre la résistance de l'air avec la vitesse ?", "opts": ["Elle reste constante quelle que soit la vitesse", "Elle croît avec le cube de la vitesse", "Elle diminue quand la vitesse augmente", "Elle croît proportionnellement à la vitesse"], "a": 1, "e": "La résistance de l'air croît avec v², et la puissance pour la vaincre avec v³. À haute vitesse, l'aérodynamisme domine tout.", "c": "Ch.7"}, {"q": "Pourquoi un cycliste s'incline-t-il dans un virage ?", "opts": ["Pour réduire volontairement sa vitesse dans la courbe", "Pour rester stable face à la force centrifuge", "Pour diminuer son poids apparent dans le virage", "Pour augmenter la résistance de l'air qui le freine"], "a": 1, "e": "L'inclinaison permet à la résultante des forces de rester alignée pour ne pas basculer, en compensant la force centrifuge ressentie dans le référentiel tournant.", "c": "Ch.7"}, {"q": "Qu'est-ce qui fournit la force centripète nécessaire en virage à vélo ?", "opts": ["La force de frottement pneu-sol", "Le poids du vélo et du cycliste", "La résistance de l'air latérale", "La force exercée sur les pédales"], "a": 0, "e": "C'est le frottement (adhérence) entre le pneu et le sol qui fournit la force centripète. Si insuffisant (sol mouillé, trop de vitesse) → dérapage. Le dévers aide.", "c": "Ch.7"}, {"q": "Que dit la « règle d'or de la mécanique » appliquée à la transmission du vélo ?", "opts": ["Plus on pédale vite, moins on avance loin", "Ce qu'on gagne en force, on le perd en chemin", "La force se conserve quel que soit le braquet", "Le choix du braquet n'a aucun effet réel"], "a": 1, "e": "Règle d'or (Galilée) : ce qu'on gagne en force, on le perd en distance. Petit braquet = moins de force mais plus de tours de pédale.", "c": "Ch.7"}, {"q": "Quelle est la vitesse du point de contact d'une roue qui roule, par rapport au sol ?", "opts": ["Égale à la vitesse d'avance du vélo", "Nulle à chaque instant", "Le double de la vitesse du vélo", "Toujours maximale sur la roue"], "a": 1, "e": "Le point de contact a une vitesse nulle par rapport au sol à chaque instant. C'est là qu'agit la force d'adhérence qui permet d'accélérer.", "c": "Ch.7"}];
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const LETTERS=["A","B","C","D"];
+let score=0, answered=0;
+const total=DATA.length;
+document.getElementById('tot').textContent=total;
+document.getElementById('finalscore').textContent='0 / '+total;
+const questions=shuffle(DATA.map((q,i)=>({...q,_i:i})));
+const quizEl=document.getElementById('quiz');
+questions.forEach((q,qi)=>{
+  const optObjs=q.opts.map((text,idx)=>({text,correct:idx===q.a}));
+  shuffle(optObjs);
+  const card=document.createElement('div');
+  card.className='q';
+  card.innerHTML='<div class="meta"><span class="num">Question '+(qi+1)+'</span><span class="chap">'+q.c+'</span></div>'+
+    '<div class="qtext">'+q.q+'</div>';
+  const optWrap=document.createElement('div');
+  optObjs.forEach((o,oi)=>{
+    const b=document.createElement('button');
+    b.className='opt';
+    b.innerHTML='<span class="letter">'+LETTERS[oi]+'</span><span>'+o.text+'</span>';
+    b.onclick=()=>{
+      if(card.dataset.done)return;
+      card.dataset.done='1';
+      answered++;
+      const btns=optWrap.querySelectorAll('.opt');
+      btns.forEach(x=>x.disabled=true);
+      if(o.correct){b.classList.add('correct');score++;}
+      else{b.classList.add('wrong');btns.forEach((x,xi)=>{if(optObjs[xi].correct)x.classList.add('correct');});}
+      const exp=card.querySelector('.exp');
+      exp.querySelector('.verdict').textContent=o.correct?'✅ Correct !':'❌ Faux';
+      exp.querySelector('.verdict').className='verdict '+(o.correct?'ok':'no');
+      exp.classList.add('show');
+      update();
+    };
+    optWrap.appendChild(b);
+  });
+  card.appendChild(optWrap);
+  const exp=document.createElement('div');
+  exp.className='exp';
+  exp.innerHTML='<div class="verdict"></div>'+q.e;
+  card.appendChild(exp);
+  quizEl.appendChild(card);
+});
+function update(){
+  document.getElementById('sc').textContent=score;
+  document.getElementById('answered').textContent=answered+' répondue'+(answered>1?'s':'');
+  document.getElementById('meter').style.width=(answered/total*100)+'%';
+  if(answered===total){
+    const r=document.getElementById('result');
+    document.getElementById('finalscore').textContent=score+' / '+total;
+    const pct=Math.round(score/total*100);
+    let m;
+    if(pct>=85)m="Excellent ! Tu maîtrises le cours, tu es prêt 💪 ("+pct+"%)";
+    else if(pct>=70)m="Très bien ! Quelques détails à revoir ("+pct+"%).";
+    else if(pct>=50)m="Pas mal, mais relis les chapitres où tu as buté ("+pct+"%).";
+    else m="Il reste du travail — reprends le résumé chapitre par chapitre ("+pct+"%).";
+    document.getElementById('msg').textContent=m;
+    r.classList.add('show');
+  }
+}
+const prog=document.getElementById('prog');
+addEventListener('scroll',()=>{const h=document.documentElement;
+  prog.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';});
+</script>
+</body>
+</html>
