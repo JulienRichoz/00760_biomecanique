@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unifr Sport — Portail de Révision</title>
+<style>
+:root{
+  --bg:#0f1620; --surface:#16202d; --surface2:#1c2836; --ink:#e8edf3; --muted:#9fb0c2;
+  --line:#2a3a4d; --primary:#43b3c9; --accent:#ffb454; --radius:14px; --shadow:0 6px 22px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:linear-gradient(160deg,#0c121b,#12202c); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  line-height:1.6; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:60px 20px;
+}
+header{text-align:center; margin-bottom:40px;}
+h1{margin:0 0 10px; font-size:2.2rem; color:var(--ink);}
+.subtitle{color:var(--primary); font-weight:700; letter-spacing:0.1em; text-transform:uppercase; font-size:0.85rem;}
+p.desc{color:var(--muted); max-width:500px; margin:0 auto;}
+
+.grid{display:flex; flex-direction:column; gap:16px; width:100%; max-width:600px;}
+.card{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:22px 24px; text-decoration:none; display:block; transition:all 0.2s;
+  box-shadow:var(--shadow); position:relative; overflow:hidden;
+}
+.card:hover{border-color:var(--primary); transform:translateY(-3px); background:var(--surface2);}
+.card h2{margin:0 0 8px; font-size:1.25rem; color:var(--accent);}
+.card p{margin:0; font-size:0.95rem; color:var(--muted);}
+
+/* Petit badge de matière */
+.badge{
+  position:absolute; top:22px; right:24px; background:rgba(67,179,201,.15);
+  color:var(--primary); padding:4px 10px; border-radius:20px; font-size:0.75rem; font-weight:700;
+}
+</style>
+</head>
+<body>
+
+  <header>
+    <div class="subtitle">Sciences du Mouvement et du Sport</div>
+    <h1>Portail de Révision</h1>
+    <p class="desc">Retrouve ici les résumés de cours, les quiz d'entraînement et les examens blancs interactifs pour tes révisions.</p>
+  </header>
+
+  <div class="grid">
+    <a href="Resume_Biomecanique_I.html" class="card">
+      <span class="badge">Bioméca I</span>
+      <h2>📘 Résumé du cours</h2>
+      <p>Théorie complète, lois de Newton, formules et explications de tous les chapitres.</p>
+    </a>
+
+    <a href="Quiz_Biomecanique_I.html" class="card">
+      <span class="badge">Bioméca I</span>
+      <h2>📝 Quiz d'auto-évaluation</h2>
+      <p>50 questions à choix multiples corrigées en direct pour tester tes connaissances.</p>
+    </a>
+
+    <a href="Examen_blanc_Biomecanique_I.html" class="card">
+      <span class="badge">Bioméca I</span>
+      <h2>🎓 Examen blanc</h2>
+      <p>Test en conditions réelles avec questions ouvertes et lecture de graphiques (exportable).</p>
+    </a>
+    
+    </div>
+
+</body>
+</html>
